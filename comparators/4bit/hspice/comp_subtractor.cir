@@ -1,0 +1,48 @@
+* 4 bit comparator using RCA subtractor
+
+* default settings
+.include params.cir
+
+* subcircuit includes
+.include rtl_utils.cir
+
+* non-default includes
+.include simulation_info.txt
+
+.include array_adders/4bRCA.cir
+.include comparators/4bit_comp_sub.cir
+
+.global vdd vdut vdd1
+* load w/ buffers
+Xa00 a0_in na0_in vdd1 inv M=4
+Xa01 na0_in a0 vdd1 inv M=4
+Xa10 a1_in na1_in vdd1 inv M=4
+Xa11 na1_in a1 vdd1 inv M=4
+Xa20 a2_in na2_in vdd1 inv M=4
+Xa21 na2_in a2 vdd1 inv M=4
+Xa30 a3_in na3_in vdd1 inv M=4
+Xa31 na3_in a3 vdd1 inv M=4
+
+Xb00 b0_in nb0_in vdd1 inv M=4
+Xb01 nb0_in b0 vdd1 inv M=4
+Xb10 b1_in nb1_in vdd1 inv M=4
+Xb11 nb1_in b1 vdd1 inv M=4
+Xb20 b2_in nb2_in vdd1 inv M=4
+Xb21 nb2_in b2 vdd1 inv M=4
+Xb30 b3_in nb3_in vdd1 inv M=4
+Xb31 nb3_in b3 vdd1 inv M=4
+
+* DUT
+Xcompare a0 a1 a2 a3 b0 b1 b2 b3 leq vdut comp_sub_4b
+
+* output load
+Cleq leq gnd 1f
+
+* default energy measures 
+.measure tran q_dut integ i(Vvdut) from=0n to=5n
+.measure tran q_in integ i(Vvdd1) from=0n to=5n
+*.measure tran q_out integ i(Vvdd2) from=0n to=5n
+
+.tran 0.1ns 5n
+
+.end

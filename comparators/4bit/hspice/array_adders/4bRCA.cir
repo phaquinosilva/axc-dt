@@ -1,0 +1,8 @@
+** 4 bit Ripple Carry Adder
+
+.subckt rca4b a0 a1 a2 a3 b0 b1 b2 b3 c0 s0 s1 s2 s3 c4 vdd
+    XFA0 a0 b0 c0 s0 c1 vdd ema
+    XFA1 a1 b1 c1 s1 c2 vdd ema
+    XFA2 a2 b2 c2 s2 c3 vdd ema
+    XFA3 a3 b3 c3 s3 c4 vdd ema
+.ends

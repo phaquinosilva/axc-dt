@@ -1,0 +1,7 @@
+class.
+
+sepal_length: continuous.
+sepal_width: continuous.
+setal_length: continuous.
+setal_width: continuous.
+class: Iris-setosa, Iris-versicolor, Iris-virginica.

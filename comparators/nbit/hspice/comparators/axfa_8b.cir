@@ -1,0 +1,15 @@
+
+* 8 bit FA Comparator
+.subckt comparator a0 a1 a2 a3 a4 a5 a6 a7 b0 b1 b2 b3 b4 b5 b6 b7 leq vdd
+*inverters
+Xa0 a0 na0 vdd inv
+Xa1 a1 na1 vdd inv
+Xa2 a2 na2 vdd inv
+Xa3 a3 na3 vdd inv
+Xa4 a4 na4 vdd inv
+Xa5 a5 na5 vdd inv
+Xa6 a6 na6 vdd inv
+Xa7 a7 na7 vdd inv
+*adders
+Xadd b0 b1 b2 b3 b4 b5 b6 b7 na0 na1 na2 na3 na4 na5 na6 na7 vdd s0 s1 s2 s3 s4 s5 s6 s7 leq vdd rca8b
+.ends

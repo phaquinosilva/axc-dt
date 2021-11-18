@@ -1,0 +1,12 @@
+*AXA2
+
+.subckt AXA2 a b cin sum cout vdd
+*PMOS
+    Mp1 vdd a sc1 a pmos_rvt nfin=3
+    Mp2 sc1 b sum b pmos_rvt nfin=3
+    Mp3 cin sum cout sum pmos_rvt nfin=3
+*NMOS
+    Mn1 sum b a b nmos_rvt nfin=3
+    Mn2 sum a b a nmos_rvt nfin=3
+    Mn3 a sum cout sum nmos_rvt nfin=3
+.ends

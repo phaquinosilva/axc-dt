@@ -1,0 +1,15 @@
+*AXA3
+
+.subckt AXA3 a b cin sum cout vdd
+*DUT
+    *PMOS
+        Mp1 vdd a tmp vdd pmos_rvt nfin=3
+        Mp2 tmp b xo vdd pmos_rvt nfin=3
+        Mp3 gnd xo sum vdd pmos_rvt nfin=3
+        Mp4 cin xo cout vdd pmos_rvt nfin=3
+    *NMOS
+        Mn1 xo b a gnd nmos_rvt nfin=3
+        Mn2 xo a b gnd nmos_rvt nfin=3
+        Mn3 cin xo sum gnd nmos_rvt nfin=3
+        Mn4 a xo cout gnd nmos_rvt nfin=3
+.ends

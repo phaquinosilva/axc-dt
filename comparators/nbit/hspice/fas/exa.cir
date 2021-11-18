@@ -1,0 +1,17 @@
+*EXA
+
+.subckt EXA a b cin sum cout vdd
+*DUT
+    *PMOS
+        Mp1 vdd a sc1 a pmos_rvt nfin=3
+        Mp2 sc1 b tmp b pmos_rvt nfin=3
+        Mp3 vdd cin sc2 cin pmos_rvt nfin=3
+        Mp4 sc2 tmp sum tmp pmos_rvt nfin=3
+        Mp5 cin tmp cout tmp pmos_rvt nfin=3
+    *NMOS
+        Mn1 tmp a b a nmos_rvt nfin=3
+        Mn2 tmp b a b nmos_rvt nfin=3
+        Mn3 sum cin tmp cin nmos_rvt nfin=3
+        Mn4 sum tmp cin tmp nmos_rvt nfin=3
+        Mn5 a tmp cout tmp nmos_rvt nfin=3
+.ends

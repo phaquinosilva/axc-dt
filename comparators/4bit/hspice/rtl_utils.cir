@@ -1,0 +1,66 @@
+** Subcircuit definitions and utilities **
+
+* XNOR 2 inputs
+.subckt xnor a b out vdd
+Mpa vdd a ab a pmos_rvt nfin=3
+Mpb ab b out b pmos_rvt nfin=3
+Mna out a b a nmos_rvt nfin=3
+Mnb out b a b nmos_rvt nfin=3
+.ends
+
+* NAND 2 inputs
+.subckt nand2 a b out vdd
+Mpa vdd a out a pmos_rvt nfin=3
+Mpb vdd b out b pmos_rvt nfin=3
+Mna out a ab a nmos_rvt nfin=3
+Mnb ab b gnd b nmos_rvt nfin=3
+.ends
+
+* NAND 3 inputs
+.subckt nand3 a b c out vdd
+Mpa vdd a out a pmos_rvt nfin=3
+Mpb vdd b out b pmos_rvt nfin=3
+Mpc vdd c out c pmos_rvt nfin=3
+Mna out a ab a nmos_rvt nfin=3
+Mnb ab b bc b nmos_rvt nfin=3
+Mnc bc c gnd c nmos_rvt nfin=3
+.ends
+
+* NAND 4 inputs
+.subckt nand4 a b c d out vdd
+Xn20 a b n0 vdd nand2
+Xn21 c d n1 vdd nand2
+Xo n0 n1 nout vdd nor2
+Xinv nout out vdd Inv
+.ends
+
+* NAND 5 inputs
+.subckt nand5 a b c d e out vdd
+Xn2 a b n0 vdd nand2
+Xn3 c d e n1 vdd nand3
+Xo n0 n1 nout vdd nor2
+Xinv nout out vdd Inv
+.ends
+
+* NOR 2 inputs
+.subckt nor2 a b out vdd
+Mpa vdd a ab a pmos_rvt nfin=3
+Mpb ab b out b pmos_rvt nfin=3
+Mna out a gnd a nmos_rvt nfin=3
+Mnb out b gnd b nmos_rvt nfin=3
+.ends
+
+* MUX 2x1
+.subckt mux21 a b sel csel q vdd
+Mp1 a sel q sel pmos_rvt nfin=3
+Mn1 a csel q csel nmos_rvt nfin=3
+Mp2 b csel q csel pmos_rvt nfin=3
+Mn2 b sel q sel nmos_rvt nfin=3
+.ends
+
+* INVERTER
+.subckt inv in out vdd
+Mp vdd in out in pmos_rvt nfin=3
+Mn out in gnd in nmos_rvt nfin=3
+.ends
+

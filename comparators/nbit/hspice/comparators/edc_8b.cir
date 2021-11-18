@@ -1,0 +1,42 @@
+* 8-bit Exact Dedicated Comparator
+
+.subckt comparator a0 a1 a2 a3 a4 a5 a6 a7 b0 b1 b2 b3 b4 b5 b6 b7 leq vdd
+   Xeq1 a1 b1 eq1 vdd xnor
+   Xeq2 a2 b2 eq2 vdd xnor
+   Xeq3 a3 b3 eq3 vdd xnor
+   Xeq4 a4 b4 eq4 vdd xnor
+   Xeq5 a5 b5 eq5 vdd xnor
+   Xeq6 a6 b6 eq6 vdd xnor
+   Xeq7 a7 b7 eq7 vdd xnor
+
+   Xnb0 b0 nb0 vdd inv
+   Xnb1 b1 nb1 vdd inv
+   Xnb2 b2 nb2 vdd inv
+   Xnb3 b3 nb3 vdd inv
+   Xnb4 b4 nb4 vdd inv
+   Xnb5 b5 nb5 vdd inv
+   Xnb6 b6 nb6 vdd inv
+   Xnb7 b7 nb7 vdd inv
+
+   Xn7 a7 nb7 n7 vdd nand2
+   Xn6 a6 nb6 eq7 n6 vdd nand3
+   Xn5 a5 nb5 eq7 eq6 n5 vdd nand4
+   Xn4 a4 nb4 eq7 eq6 eq5 n4 vdd nand5
+   Xn3 a3 nb3 nt3 vdd nand2
+   Xn2 a2 nb2 eq3 nt2 vdd nand3
+   Xn1 a1 nb1 eq3 eq2 nt1 vdd nand4
+   Xn0 a0 nb0 eq3 eq2 eq1 nt0 vdd nand5
+   
+   Xnand0 eq7 eq6 eq5 eq4 n47 vdd nand4
+   Xnor3 nt3 n47 n3 vdd nor2
+   Xnor2 nt2 n47 n2 vdd nor2
+   Xnor1 nt1 n47 n1 vdd nor2
+   Xnor0 nt0 n47 n0 vdd nor2
+   
+   Xnorgr n0 n1 n2 n3 norgr vdd nor4
+   Xnandgr n4 n5 n6 n7 nandgr vdd nand4
+   Xorgr norgr orgr vdd inv
+   
+   Xleq orgr nandgr leq vdd nor2
+   
+.ends

@@ -1,0 +1,32 @@
+* 8-bit Approximate Dedicated Comparator 2
+
+.subckt comparator a0 a1 a2 a3 a4 a5 a6 a7 b0 b1 b2 b3 b4 b5 b6 b7 leq vdd
+   Xeq3 a3 b3 eq3 vdd xnor
+   Xeq4 a4 b4 eq4 vdd xnor
+   Xeq5 a5 b5 eq5 vdd xnor
+   Xeq6 a6 b6 eq6 vdd xnor
+   Xeq7 a7 b7 eq7 vdd xnor
+
+   Xnb2 b2 nb2 vdd inv
+   Xnb3 b3 nb3 vdd inv
+   Xnb4 b4 nb4 vdd inv
+   Xnb5 b5 nb5 vdd inv
+   Xnb6 b6 nb6 vdd inv
+   Xnb7 b7 nb7 vdd inv
+
+   Xnand0 eq7 eq6 eq5 eq4 n47 vdd nand4
+   Xand0 n47 p47 vdd inv
+
+   Xn7 a7 nb7 n7 vdd nand2
+   Xn6 a6 nb6 eq7 n6 vdd nand3
+   Xn5 a5 nb5 eq7 eq6 n5 vdd nand4
+   Xn4 a4 nb4 eq7 eq6 eq5 n4 vdd nand5
+   Xn3 a3 nb3 n47 n3 vdd nand3
+   Xn2 a2 nb2 n47 eq3 n2 vdd nand4
+
+   Xpartial0 n2 n3 n4 p1 vdd nand3
+   Xpartial1 n5 n6 n7 p2 vdd nand3
+
+   Xleq p1 p2 leq vdd nor2
+   
+.ends

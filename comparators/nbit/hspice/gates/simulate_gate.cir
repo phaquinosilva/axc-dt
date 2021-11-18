@@ -1,0 +1,22 @@
+* RTL components simulation
+
+* default settings
+.include params.cir
+
+* subcircuit includes
+.include rtl_utils.cir
+
+* non-default includes -- simulation source, load, dut
+.include source.cir
+.include simulation_info.cir
+
+* output load
+Cleq leq gnd 1f
+
+* default energy measures
+.measure tran q_dut integ i(Vvdut) from=0n to=3n
+.measure tran q_in integ i(Vvdd1) from=0n to=3n
+
+.tran 0.1ns 3n
+
+.end

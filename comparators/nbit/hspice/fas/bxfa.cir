@@ -1,0 +1,8 @@
+* BXFA
+
+.subckt BXFA a b cin sum cout vdd
+    Xinva a o vdd gnd Inv
+    Xinvb o sum vdd gnd Inv
+    Xinva b o vdd gnd Inv
+    Xinvb o cout vdd gnd Inv
+.ends

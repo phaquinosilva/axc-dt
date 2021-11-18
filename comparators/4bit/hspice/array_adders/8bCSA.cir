@@ -1,0 +1,25 @@
+** 8 bit Carry Select Adder
+
+.subckt csa8b a0 a1 a2 a3 a4 a5 a6 a7 b0 b1 b2 b3 b4 b5 b6 b7 c0 s0 s1 s2 s3 s4 s5 s6 s7 vdd
+    XFA0 a0 b0 c0 s0 c1 vdd ema
+    XFA1 a1 b1 c1 s1 c2 vdd ema
+    XFA2 a2 b2 c2 s2 c3 vdd ema
+    XFA3 a3 b3 c3 s3 c4 vdd ema
+    *0
+    XFA40 a4 b4 gnd s40 c50 vdd ema
+    XFA50 a5 b5 c50 s50 c60 vdd ema
+    XFA60 a6 b6 c60 s60 c70 vdd ema
+    XFA70 a7 b7 c70 s70 c80 vdd ema
+    *1
+    XFA41 a4 b4 vdd s41 c51 vdd ema
+    XFA51 a5 b5 c51 s51 c61 vdd ema
+    XFA61 a6 b6 c61 s61 c71 vdd ema
+    XFA71 a7 b7 c71 s71 c81 vdd ema
+    *mux
+    Xsel c4 nc4 vdd Inv
+    XM4 s40 s41 c4 nc4 s4 vdd mux21
+    XM5 s50 s51 c4 nc4 s5 vdd mux21
+    XM6 s60 s61 c4 nc4 s6 vdd mux21
+    XM7 s70 s71 c4 nc4 s7 vdd mux21
+    XM8 c80 c81 c4 nc4 c8 vdd mux21
+.ends

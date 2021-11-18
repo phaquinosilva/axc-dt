@@ -1,0 +1,14 @@
+** Default parameters in simulation **
+
+* predictive model
+.include 7nm_FF.pm
+.param vdd = 0.7V
+
+* output formatting - cscope and csv
+.option post = 2
+.option measform = 3
+
+* default voltage sources used
+Vvdd1 vdd1 gnd vdd
+Vvdut vdut gnd vdd
+
