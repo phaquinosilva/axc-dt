@@ -10,7 +10,7 @@ SIMULATION_TIME = 2.5e-9
 
 def process_comparators(name: str, enable_cleanup: bool = False) -> None:
     results = {}
-    comparators = ["edc", "axdc2", "sma", "ama1", "ama2"]
+    comparators = ["edc", "axdc2", "axdc6", "sma", "ama1", "ama2"]
     for circuit in comparators:
         results[circuit] = process_results(circuit, name, enable_cleanup)
     prime = pd.DataFrame(results)
@@ -38,7 +38,7 @@ def process_results(
     total_power = sum(power_list)
     n_ops = len(energy_list)
     avg_energy = total_energy / n_ops
-    avg_power = total_power / n_ops
+    avg_power = total_power / n_ops  # para cada comparação
     return {
         "energy": total_energy,
         "power": total_power,

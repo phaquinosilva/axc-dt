@@ -79,7 +79,7 @@ def write_sources(prev, later, output, n, file_name, infos):
     states = []
     states.append((list_bin(prev, n), list_bin(later, n)))
     # write input sources in a file
-    with open("sources/source_" + file_name + ".cir", "w+") as file:
+    with open("sources/source_" + file_name + ".txt", "w+") as file:
         file.write("** sources and measures for comparator type: " + file_name + "\n\n")
         for before, after in states:
             # writes all input sources for A
@@ -120,8 +120,8 @@ def run_simulation(gate, interest):
     import os
 
     for source_num in range(interest[name]):
-        source = f"\n.include sources/source_{name}_{source_num}.cir"
-        with open("source.cir", "w") as f:
+        source = f"\n.include sources/source_{name}_{source_num}.txt"
+        with open("source.txt", "w") as f:
             f.write(source)
         os.system("hspice simulate_gate.cir")
         os.rename("simulate_gate.mt0.csv", f"results/result_{name}_{source_num}.csv")
@@ -139,7 +139,7 @@ def prepare_simulation(gate):
             f"Xa{i}0 a{i}_in na{i}_in vdd1 inv M=4\n"
             + f"Xa{i}1 na{i}_in a{i} vdd1 inv M=4\n"
         )
-    with open("simulation_info.cir", "w") as f:
+    with open("simulation_info.txt", "w") as f:
         f.write(loads)
         f.write("\n")
         f.write(include)
@@ -155,6 +155,7 @@ def simulate_gates():
     nor2 = lambda x: 0 if (x[0] or x[1]) else 1
     nor4 = lambda x: 0 if (x[0] or x[1] or x[2] or x[3]) else 1
     mux21 = lambda x: x[0] if x[2] == 0 else x[1]
+    xnor = lambda x: 0 if (x[0]==1 and x[1]==0) or (x[0]==0 and x[1]==1) else 1 
     gates = [
         (nand2, 2, "nand2"),
         (nand3, 3, "nand3"),
@@ -162,8 +163,9 @@ def simulate_gates():
         (nand5, 5, "nand5"),
         (nor2, 2, "nor2"),
         (nor4, 4, "nor4"),
-        # (inv, 1, 'inv'),
+        (inv, 1, 'inv'),
         (mux21, 3, "mux21"),
+    	(xnor, 2, "xnor"),
     ]
     interest = create_sources_files(gates)
     for name in interest.keys():

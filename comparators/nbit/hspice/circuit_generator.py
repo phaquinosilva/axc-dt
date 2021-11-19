@@ -76,7 +76,7 @@ def spicegen_axdc2(n):
 def spicegen_axdc6(n):
     """Generate AxDC6 description"""
     # output file
-    f = open("axdc6_%db.cir" % n, "w+")
+    f = open(f"axdc6_{n}b.cir", "w+")
     # signal information
     a_in = ["a%d" % i for i in range(n)]
     b_in = ["b%d" % i for i in range(n)]
@@ -84,16 +84,16 @@ def spicegen_axdc6(n):
     n_4 = int(n / 4)
     # initialize file
     f.write(
-        "* %d-bit Approximate Dedicated Comparator 6\n\n.include gates.cir\n"
-        + "\n.subckt comparator %s %s leq vdd\n" % (n, " ".join(a_in), " ".join(b_in))
+        f"* {n}-bit Approximate Dedicated Comparator 6\n\n.include gates.cir\n"
+        + "\n.subckt comparator %s %s leq vdd\n" % (" ".join(a_in), " ".join(b_in))
     )
     # compute xnors
     for i in range(n_2 + 1, n):
-        f.write("   Xeq%d a%d b%d eq%d vdd xnor\n" % (i, i, i, i))
+        f.write(f"   Xeq{i} a{i} b{i} eq{i} vdd xnor\n")
     f.write("\n")
     # negate B
     for i in range(n_2, n):
-        f.write("   Xnb%d b%d nb%d vdd inv\n" % (i, i, i))
+        f.write(f"   Xnb{i} b{i} nb{i} vdd inv\n")
     f.write("\n")
     # compute greater for each bit
     count = 0
@@ -107,8 +107,7 @@ def spicegen_axdc6(n):
     # buffer b inputs
     for i in range(n_4, n_2):
         f.write(
-            "   Xib%d b%d ib%d vdd inv\n   Xbb%d ib%d bb%d vdd inv\n"
-            % (i, i, i, i, i, i)
+            f"   Xib{i} b{i} ib{i} vdd inv\n   Xbb{i} ib{i} bb{i} vdd inv\n"
         )
     f.write("\n")
     # compute less or equal than

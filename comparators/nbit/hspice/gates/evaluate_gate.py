@@ -29,7 +29,7 @@ def organize_results(gate):
 
 
 def run_processing():
-    gates = ["inv", "mux21", "nand2", "nand3", "nand4", "nand5", "nor2", "nor4"]
+    gates = ["inv", "mux21", "nand2", "nand3", "nand4", "nand5", "nor2", "nor4", "xnor"]
     results = {}
     for gate in gates:
         results[gate] = organize_results(gate)

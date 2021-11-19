@@ -9,23 +9,24 @@ NOMINAL_VOLTAGE = 0.7
 SIMULATION_TIME = 2.5e-9
 ADDERS = ["sma", "ama1", "ama2"]
 COMPARATORS = ["edc", "axdc2"]
-
+AXDC6 = "axdc6"
 
 def simulate_operations(input_file: Path, name: str, n_bits: int) -> None:
     """
     Simulates the comparisons made in a DT application
     with n-bit comparators
-    """
-    for circuit in ADDERS + COMPARATORS:
-        if circuit in ADDERS:
-            create_rca_include(circuit, n_bits)
-        num_samples = create_input_sources(
-            inputs_file=input_file / f"logs/{name}_{circuit}.comp",
-            saving_dir=Path.cwd() / "sources",
-            n=n_bits,
-        )
-        for i in range(num_samples):
-            run_simulation(comparator=circuit, op_index=i, n_bits=n_bits)
+    # """
+    # for circuit in ADDERS + COMPARATORS:
+    #     if circuit in ADDERS:
+    #         create_rca_include(circuit, n_bits)
+    circuit = AXDC6
+    num_samples = create_input_sources(
+        inputs_file=input_file / f"logs/{name}_{circuit}.comp",
+        saving_dir=Path.cwd() / "sources",
+        n=n_bits,
+    )
+    for i in range(num_samples):
+        run_simulation(comparator=circuit, op_index=i, n_bits=n_bits, dataset=name)
 
 
 def create_rca_include(fa: str, n: int) -> None:
