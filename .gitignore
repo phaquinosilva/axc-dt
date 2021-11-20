@@ -1,0 +1,32 @@
+
+# folders
+__pycache__/
+build/
+8bit_adders/
+debug/
+.vscode/
+outputs/
+sources/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+
+# C5.0 outputs and mods
+*.info
+*.tree
+*.datalog
+*.testlog
+*.output
+*.tmp
+*.o
+
+# Generated temporary or simulation-specific HSPICE files
+# TODO: Find a better suited file extension
+*.txt
+
+# Other
+*teste*
+*scope*
+*~
+*.png

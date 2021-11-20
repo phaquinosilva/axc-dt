@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 FA_BASED = ["sma", "ama1", "ama2"]
-DEDICATED = ["n_edc", "n_adc2", "n_adc6"]
+DEDICATED = ["edc", "axdc2", "axdc6"]
 
 CATEGORICAL = ["mushroom", "car", "kr-vs-kp", "splice", "tic-tac-toe"]
 MIXED = ["health", "iris", "forest"]
@@ -103,7 +103,7 @@ def train(*, enable_build: bool = False) -> None:
             )
             os.rename(
                 f"../datasets/quantized/{dataset}/{dataset}.testlog",
-                f"../../comparators/nbit/hspice/logs/{dataset}.testlog",
+                f"../../comparators/nbit/hspice/logs/{dataset}_{comp}.testlog",
             )
     for dataset in CATEGORICAL:
         if not (Path(f"../datasets/raw/{dataset}/output/")).exists():
@@ -119,7 +119,7 @@ def train(*, enable_build: bool = False) -> None:
             )
             os.rename(
                 f"../datasets/raw/{dataset}/{dataset}.testlog",
-                f"../../comparators/nbit/hspice/logs/{dataset}.testlog",
+                f"../../comparators/nbit/hspice/logs/{dataset}_{comp}.testlog",
             )
 
 

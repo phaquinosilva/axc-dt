@@ -1,0 +1,12 @@
+* 4 bit comparator using subtractors
+
+** B - A: A <= B in leq: 1 if True
+.subckt comparator a0 a1 a2 a3 b0 b1 b2 b3 leq vdd
+*inverters
+Xa0 a0 na0 vdd inv
+Xa1 a1 na1 vdd inv
+Xa2 a2 na2 vdd inv
+Xa3 a3 na3 vdd inv
+*adders
+Xadd b0 b1 b2 b3 na0 na1 na2 na3 vdd s0 s1 s2 s3 leq vdd rca4b
+.ends

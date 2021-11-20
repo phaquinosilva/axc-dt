@@ -134,7 +134,7 @@ int leq(int a, int b, void (*f)(int, int, int, int *), int n)
 
 /* n-Bit Dedicated Comparators */
 
-int n_edc(int a, int b, int n)
+int edc(int a, int b, int n)
 {
     int bin_a[n];
     int bin_b[n];
@@ -160,7 +160,7 @@ int n_edc(int a, int b, int n)
     // return 0;
 }
 
-int n_adc2(int a, int b, int n)
+int axdc2(int a, int b, int n)
 {
     int bin_a[n];
     int bin_b[n];
@@ -185,7 +185,7 @@ int n_adc2(int a, int b, int n)
     return ~greater & 1;
 }
 
-int n_adc6(int a, int b, int n)
+int axdc6(int a, int b, int n)
 {
     int bin_a[n];
     int bin_b[n];

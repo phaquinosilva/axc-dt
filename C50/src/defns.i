@@ -788,9 +788,9 @@ float	    SE(float sum, float sumsq, int no);
 	/* ax_adders.c */
 
 int leq(int a, int b, void (*f) (int, int, int, int *), int n);
-int n_edc(int a, int b, int n);
-int n_adc2(int a, int b, int n);
-int n_adc6(int a, int b, int n);
+int edc(int a, int b, int n);
+int axdc2(int a, int b, int n);
+int axdc6(int a, int b, int n);
 
 void sma(int a, int b, int cin, int output[]);
 void ama1(int a, int b, int cin, int output[]);
