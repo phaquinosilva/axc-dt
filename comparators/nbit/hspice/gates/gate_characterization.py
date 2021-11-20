@@ -155,7 +155,7 @@ def simulate_gates():
     nor2 = lambda x: 0 if (x[0] or x[1]) else 1
     nor4 = lambda x: 0 if (x[0] or x[1] or x[2] or x[3]) else 1
     mux21 = lambda x: x[0] if x[2] == 0 else x[1]
-    xnor = lambda x: 0 if (x[0]==1 and x[1]==0) or (x[0]==0 and x[1]==1) else 1 
+    xnor = lambda x: 0 if (x[0] == 1 and x[1] == 0) or (x[0] == 0 and x[1] == 1) else 1
     gates = [
         (nand2, 2, "nand2"),
         (nand3, 3, "nand3"),
@@ -163,9 +163,9 @@ def simulate_gates():
         (nand5, 5, "nand5"),
         (nor2, 2, "nor2"),
         (nor4, 4, "nor4"),
-        (inv, 1, 'inv'),
+        (inv, 1, "inv"),
         (mux21, 3, "mux21"),
-    	(xnor, 2, "xnor"),
+        (xnor, 2, "xnor"),
     ]
     interest = create_sources_files(gates)
     for name in interest.keys():

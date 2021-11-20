@@ -106,9 +106,7 @@ def spicegen_axdc6(n):
     f.write("\n")
     # buffer b inputs
     for i in range(n_4, n_2):
-        f.write(
-            f"   Xib{i} b{i} ib{i} vdd inv\n   Xbb{i} ib{i} bb{i} vdd inv\n"
-        )
+        f.write(f"   Xib{i} b{i} ib{i} vdd inv\n   Xbb{i} ib{i} bb{i} vdd inv\n")
     f.write("\n")
     # compute less or equal than
     ns = ["n%d" % i for i in range(n_2, n)]
