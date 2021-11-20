@@ -125,13 +125,13 @@ void FindLeaf(DataRec Case, Tree T, Tree PT, float Fraction)
 		// @grellert: aqui é feita a comparação
 		// @pedro: implementa aqui a chamada pra tua função
 		// @pedro: criação dos logs de comparação
-		if ( F = GetFile(".comp", "a") ) {  /* Save values in comparison */
+		if ( F = GetFile(LogFile, "a") ) {  /* Save values in comparison */
 			fprintf(F, "%d,%d\n", Dv, T->Forks);
 			fflush(F);
 			fclose(F);
 		}
-	    // if ( Dv <= T->Forks )	/*  Make sure not new discrete value  */
-		if ( n_adc6(Dv, T->Forks, 8) )
+		/*  Make sure not new discrete value  */
+	    if ( Dv <= T->Forks )
 		{
 			FindLeaf(Case, T->Branch[Dv], T, Fraction);
 		}
@@ -185,14 +185,13 @@ void FindLeaf(DataRec Case, Tree T, Tree PT, float Fraction)
 		
 		// @Pedro: aproximacao leq aqui
 		/* Save values in comparison */
-		if ( F = GetFile(".comp", "a") ) {
+		if ( F = GetFile(LogFile, "a") ) {
 			fprintf(F, "%d,%d\n", Dv, MaxAttVal[T->Tested]);
 			fflush(F);
 			fclose(F);
 		}
 		
-	    // if ( Dv <=  MaxAttVal[T->Tested] )
-		if ( n_adc6(Dv, MaxAttVal[T->Tested], 8))
+	    if ( Dv <= MaxAttVal[T->Tested] )
 		{
 		
 		ForEach(v, 1, T->Forks)
@@ -703,35 +702,30 @@ float Interpolate(Tree T, ContValue Val)
     float returnable;
 
 	/* Save operators */
-	if ( F = GetFile(".comp", "a") ) {
+	if ( F = GetFile(LogFile, "a") ) {
 			fprintf(F, "%f,%f\n", Val, T->Lower);
 			fflush(F);
 			fclose(F);
 	}
-	if ( !(n_adc6(Val, T->Lower, 8)) )
-	// if ( !(Val <= T->Lower) )
-		if ( F = GetFile(".comp", "a") ) {
+	if ( !(Val <= T->Lower) )
+		if ( F = GetFile(LogFile, "a") ) {
 			fprintf(F, "%f,%f\n", T->Upper, Val);
 			fflush(F);
 			fclose(F);
 		}
-	else if ( !(n_adc6(T->Upper, Val, 8)) )
-	//  else if ( !(T->Upper <= Val) )
-		if ( F = GetFile(".comp", "a") ) {
+	else if ( !(T->Upper <= Val) )
+		if ( F = GetFile(LogFile, "a") ) {
 			fprintf(F, "%f,%f\n", Val, T->Mid);
 			fflush(F);
 			fclose(F);
 		}
 
 	// @pedro: aproximar todas essas operações
-	// if (Val <= T->Lower)
-	if ( n_adc6(Val, T->Lower, 8) )
+	if ( !(Val <= T->Lower) )
 		returnable = 1.0;
-	// else if (T->Upper <= Val)
-	else if ( n_adc6(T->Upper, Val, 8) )
+	else if ( !(T->Upper <= Val) )
 		returnable = 0.0;
-	// else if (Val <= T->Mid)
-	else if ( n_adc6(Val, T->Mid, 8) )
+	else if ( Val <= T->Mid )
 		returnable = 1 - 0.5 * (Val - T->Lower) / (T->Mid - T->Lower + 1E-6);
 	else
 		returnable = 0.5 - 0.5 * (Val - T->Mid) / (T->Upper - T->Mid + 1E-6);

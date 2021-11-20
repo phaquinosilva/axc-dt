@@ -221,3 +221,5 @@
 #define	 T_ErrorLimit		"\nError limit exceeded\n"
 #define	 TX_IllegalValue(v,l,h)	"\t** illegal value %g -- "\
 				"should be between %g and %g\n", v, l, h
+
+#define LogFile (Now == EVALTEST ? ".testlog" : ".datalog")
