@@ -30,8 +30,11 @@ def build_fa_based(n_bits: int) -> None:
         replaced_lines = {}
         for line, val1, val2 in ATTRIBUTE_TESTS:
             new_line = f"if ( leq({val1}, {val2}, {adder}, {n_bits}) )"
+            if "!" in line:
+                new_line = f"if ( !leq({val1}, {val2}, {adder}, {n_bits}) )"
             if "else" in line:
                 new_line = "else " + new_line
+            
             replaced_lines[line] = new_line
             classify = classify.replace(line, new_line)
         with open("classify.c", "w") as f:
@@ -60,6 +63,8 @@ def build_dedicated(n_bits: int) -> None:
         replaced_lines = {}
         for line, val1, val2 in ATTRIBUTE_TESTS:
             new_line = f"if ( {comp}({val1}, {val2}, {n_bits}) )"
+            if "!" in line:
+                new_line = f"if ( !{comp}({val1}, {val2}, {n_bits}) )"
             if "else" in line:
                 new_line = "else " + new_line
             replaced_lines[line] = new_line
@@ -124,4 +129,4 @@ def train(*, enable_build: bool = False) -> None:
 
 
 if __name__ == "__main__":
-    train()
+    train(enable_build=True)

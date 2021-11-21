@@ -62,7 +62,7 @@ def quantize_training_values(
     :return:
         A DataFrame with the new quantized dataset to be written on a new .data file
     """
-    info = {}
+    info: Dict = dict()
     floats = [col for col in df if (str(df.dtypes[col]) == "float64")]
     for col in floats:
         info[col] = {}

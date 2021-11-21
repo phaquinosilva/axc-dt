@@ -721,9 +721,9 @@ float Interpolate(Tree T, ContValue Val)
 		}
 
 	// @pedro: aproximar todas essas operações
-	if ( !(Val <= T->Lower) )
+	if ( (Val <= T->Lower) )
 		returnable = 1.0;
-	else if ( !(T->Upper <= Val) )
+	else if ( (T->Upper <= Val) )
 		returnable = 0.0;
 	else if ( Val <= T->Mid )
 		returnable = 1 - 0.5 * (Val - T->Lower) / (T->Mid - T->Lower + 1E-6);
