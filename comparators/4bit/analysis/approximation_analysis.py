@@ -1,8 +1,8 @@
-from numpy import greater
 import pandas as pd
-from adders import *
 from ac_operations import *
+from adders import *
 from comparators.b4.analysis.axdc import add
+from numpy import greater
 
 """
 ##################### ANALISE DE ERRO EM COMPARADORES 4bit ###################### 

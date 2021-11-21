@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from typing import Callable, List, Tuple, Iterable
+from typing import Callable, Iterable, List, Tuple
 
 
 def list_bin(number: int, n_bits: int) -> List[int]:

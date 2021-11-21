@@ -4,8 +4,8 @@ Reads from a log file of the operands used during classification
 and provide SPICE files with PWL transitions for simulation.
 """
 
-from typing import Tuple, List
 from pathlib import Path
+from typing import List, Tuple
 
 
 def write_source(

@@ -1,6 +1,7 @@
 from typing import Dict
-import pandas as pd
+
 import numpy as np
+import pandas as pd
 from fxpmath import Fxp
 
 

@@ -4,9 +4,9 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from matplotlib import cm, colors
+from matplotlib import pyplot as plt
 from skimage import measure
-
-from matplotlib import pyplot as plt, cm, colors
 
 # sim_data = pd.read_csv('/home/pedro/Documentos/ECLab/ACxML/SIM21/approximate 4bit comparators_decision trees - comparator characterization.csv', index_col=0)
 

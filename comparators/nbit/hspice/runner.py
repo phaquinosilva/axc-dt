@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 from input_generator import create_input_sources
 
 ADDERS = ["sma", "ama1", "ama2"]

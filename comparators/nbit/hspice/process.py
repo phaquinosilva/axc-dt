@@ -1,7 +1,8 @@
-import pandas as pd
-from pathlib import Path
 import os
+from pathlib import Path
 from typing import Dict
+
+import pandas as pd
 from input_generator import count_repeated
 from runner import COMPARATORS, DATASETS
 
@@ -15,7 +16,9 @@ def process_comparators(name: str, *, enable_cleanup: bool = False) -> None:
         results[circuit] = process_results(circuit, name, enable_cleanup=enable_cleanup)
     if not (Path(__file__).parents[3] / "results/").exists():
         (Path(__file__).parents[3] / "results/").mkdir()
-    pd.DataFrame(results).to_csv(Path(__file__).parents[3] / f"/results/{name}_operation_results.csv")
+    pd.DataFrame(results).to_csv(
+        Path(__file__).parents[3] / f"/results/{name}_operation_results.csv"
+    )
 
 
 def process_results(
@@ -29,7 +32,9 @@ def process_results(
     data_path = Path(__file__).parents[3] / f"C50/datasets/raw/{dataset}/{dataset}.test"
     with data_path.open("r") as f:
         n_inputs = len(f.readlines())
-    count = count_repeated(Path(__file__).parent / f"logs/{dataset}_{comparator}.testlog")
+    count = count_repeated(
+        Path(__file__).parent / f"logs/{dataset}_{comparator}.testlog"
+    )
 
     for id, pair in enumerate(count):
         num, _ = pair

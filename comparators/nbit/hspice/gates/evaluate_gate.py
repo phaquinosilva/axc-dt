@@ -1,8 +1,9 @@
 #!/home/pedro/.miniconda3/bin/python
 
-from pathlib import Path
-import pandas as pd
 import os
+from pathlib import Path
+
+import pandas as pd
 
 SIM_TIME = 3e-9
 VOLTAGE = 0.7

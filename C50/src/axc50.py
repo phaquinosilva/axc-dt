@@ -34,7 +34,7 @@ def build_fa_based(n_bits: int) -> None:
                 new_line = f"if ( !leq({val1}, {val2}, {adder}, {n_bits}) )"
             if "else" in line:
                 new_line = "else " + new_line
-            
+
             replaced_lines[line] = new_line
             classify = classify.replace(line, new_line)
         with open("classify.c", "w") as f:

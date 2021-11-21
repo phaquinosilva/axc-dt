@@ -1,7 +1,8 @@
-from typing import Dict
-import pandas as pd
 import re
 from pathlib import Path
+from typing import Dict
+
+import pandas as pd
 
 # Comparators
 ADDERS = ["sma", "ama1", "ama2"]
@@ -28,11 +29,12 @@ def extract_rates(lines: str) -> Dict[str, float]:
     test_rate = extract_percentage(test_eval)
     return training_rate, test_rate
 
-#TODO: #2 Improve readability/maintainability of this function
+
+# TODO: #2 Improve readability/maintainability of this function
 def find_error_rates():
     testsets = []
     trainsets = []
-    
+
     for set in CATEGORICAL:
         test = {}
         train = {}
@@ -48,7 +50,7 @@ def find_error_rates():
         test = pd.Series(test)
         trainsets.append(train)
         testsets.append(test)
-    
+
     for set in MIXED:
         test = {}
         train = {}
@@ -60,13 +62,14 @@ def find_error_rates():
         test = pd.Series(test)
         trainsets.append(train)
         testsets.append(test)
-        
-    test_rates = pd.concat(testsets, axis=1, keys=CATEGORICAL+MIXED)
-    train_rates = pd.concat(trainsets, axis=1, keys=CATEGORICAL+MIXED)
+
+    test_rates = pd.concat(testsets, axis=1, keys=CATEGORICAL + MIXED)
+    train_rates = pd.concat(trainsets, axis=1, keys=CATEGORICAL + MIXED)
     print(test_rates)
     print(train_rates)
     test_rates.to_csv(Path(__file__).parents[2] / f"test_error_rates.csv")
     train_rates.to_csv(Path(__file__).parents[2] / f"train_error_rates.csv")
+
 
 if __name__ == "__main__":
     find_error_rates()
