@@ -80,8 +80,8 @@ def spicegen_axdc6(n):
     # signal information
     a_in = ["a%d" % i for i in range(n)]
     b_in = ["b%d" % i for i in range(n)]
-    n_2 = int(n / 2)
-    n_4 = int(n / 4)
+    n_2 = n // 2
+    n_4 = n // 4
     # initialize file
     f.write(
         f"* {n}-bit Approximate Dedicated Comparator 6\n\n.include gates.cir\n"
@@ -117,7 +117,7 @@ def spicegen_axdc6(n):
     f.write("   Xleq gr leq vdd inv\n.ends")
     f.close()
 
-
+spicegen_axdc6(4)
 def spicegen_adder(adder, n):
     """
     Generates SPICE for full adder based comparators (use ripple carry architecture)

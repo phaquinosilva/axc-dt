@@ -5,7 +5,7 @@ from input_generator import create_input_sources
 
 ADDERS = ["sma", "ama1", "ama2"]
 DEDICATED = ["edc", "axdc2", "axdc6"]
-COMPARATORS = DEDICATED + ADDERS
+COMPARATORS = ADDERS + DEDICATED
 
 CATEGORICAL = ["mushroom", "car", "kr-vs-kp", "splice", "tic-tac-toe"]
 MIXED = ["health", "iris", "forest"]

@@ -7,8 +7,10 @@ circuits. Currently supported are the 4-bit comparators:
 
 
 def edc(a, b):
-    a = [int(i) for i in a][::-1]
-    b = [int(i) for i in b][::-1]
+    a = format(a, "#0%db" % 6)[:1:-1]
+    b = format(b, "#0%db" % 6)[:1:-1]
+    a = [int(i) for i in a]
+    b = [int(i) for i in b]
     eq1 = ~(a[1] ^ b[1])
     eq2 = ~(a[2] ^ b[2])
     eq3 = ~(a[3] ^ b[3])
@@ -36,8 +38,10 @@ def axdc1(a, b):
 
 def axdc2(a, b):
     ## aprrox 2: tirar a lógica do bit 0
-    a = [int(i) for i in a][::-1]
-    b = [int(i) for i in b][::-1]
+    a = format(a, "#0%db" % 6)[:1:-1]
+    b = format(b, "#0%db" % 6)[:1:-1]
+    a = [int(i) for i in a]
+    b = [int(i) for i in b]
     # eq1 = ~(a[1] ^ b[1])
     eq2 = ~(a[2] ^ b[2])
     eq3 = ~(a[3] ^ b[3])
@@ -93,18 +97,15 @@ def axdc5(a, b):
 
 
 def axdc6(a, b):
+    a = format(a, "#0%db" % 6)[:1:-1]
+    b = format(b, "#0%db" % 6)[:1:-1]
     # aproximação: tirar lógica com bit 0 e trcar a do bit 1 por a1
-    a = [int(i) for i in a][::-1]
-    b = [int(i) for i in b][::-1]
-    # eq1 = ~(a[1] ^ b[1])
-    # eq2 = ~(a[2] ^ b[2])
+    a = [int(i) for i in a]
+    b = [int(i) for i in b]
     eq3 = ~(a[3] ^ b[3])
     n3 = ~(a[3] & ~b[3])
     n2 = ~(a[2] & ~b[2] & eq3)
-    n1 = b[1]
-    # n1 = ~(a[1] & ~b[1] & eq3 & eq2)
-    # n0 = ~(a[0] & ~b[0] & eq3 & eq2 & eq1)
-    return (n1 & n2 & n3) & 1
+    return (n2 & n3 & b[1]) & 1
 
 
 # soma simples nbit
@@ -139,8 +140,5 @@ def geq(adder, in_a, in_b, n_bits):
 
 # a <= b
 def leq(adder, in_a, in_b, n_bits):
-    (
-        _,
-        cout,
-    ) = sub(adder, in_b, in_a, n_bits)
+    _, cout = sub(adder, in_b, in_a, n_bits)
     return cout

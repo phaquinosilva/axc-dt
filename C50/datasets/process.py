@@ -31,7 +31,7 @@ def extract_rates(lines: str) -> Dict[str, float]:
 
 
 # TODO: #2 Improve readability/maintainability of this function
-def find_error_rates():
+def find_error_rates(*, save_files: bool = False) -> None:
     testsets = []
     trainsets = []
 
@@ -44,8 +44,6 @@ def find_error_rates():
             tr, te = extract_rates(lines)
             train[comparator] = tr
             test[comparator] = te
-        print(train)
-        print(test)
         train = pd.Series(train)
         test = pd.Series(test)
         trainsets.append(train)
@@ -65,11 +63,11 @@ def find_error_rates():
 
     test_rates = pd.concat(testsets, axis=1, keys=CATEGORICAL + MIXED)
     train_rates = pd.concat(trainsets, axis=1, keys=CATEGORICAL + MIXED)
-    print(test_rates)
-    print(train_rates)
-    test_rates.to_csv(Path(__file__).parents[2] / f"test_error_rates.csv")
-    train_rates.to_csv(Path(__file__).parents[2] / f"train_error_rates.csv")
-
+    if save_files:
+        test_rates.to_csv(Path(__file__).parents[2] / f"test_error_rates.csv")
+        train_rates.to_csv(Path(__file__).parents[2] / f"train_error_rates.csv")
+    return test_rates, train_rates
 
 if __name__ == "__main__":
-    find_error_rates()
+    test, train = find_error_rates()
+    print(test)

@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from typing import Sequence
 
 FA_BASED = ["sma", "ama1", "ama2"]
 DEDICATED = ["edc", "axdc2", "axdc6"]
@@ -87,29 +88,24 @@ def build_dedicated(n_bits: int) -> None:
             f.write(classify)
 
 
-def train(*, enable_build: bool = False) -> None:
+def train(
+    *,
+    n_bits: int = 8,
+    enable_build: bool = False,
+    dataset_type: Sequence[str] = ["CONTINUOUS", "CATEGORICAL"],
+) -> None:
     if enable_build:
         build_fa_based(n_bits=8)
         build_dedicated(n_bits=8)
         build_fa_based(n_bits=4)
         build_dedicated(n_bits=4)
+    if "CONTINUOUS" in dataset_type:
+        _train_continuous(n_bits=8)
+    if "CATEGORICAL" in dataset_type:
+        _train_categorical(n_bits=4)
 
-    for dataset in MIXED:
-        if not (Path(f"../datasets/raw/{dataset}/output/")).exists():
-            (Path(f"../datasets/raw/{dataset}/output/")).mkdir()
-        os.system(
-            f"../build/full_approx/c5.0_default -f ../datasets/quantized/{dataset}/{dataset}"
-            + f" > ../datasets/quantized/{dataset}/output/{dataset}_default.output"
-        )
-        for comp in FA_BASED + DEDICATED:
-            os.system(
-                f"../build/full_approx/c5.0_{comp}_8b -f ../datasets/quantized/{dataset}/{dataset}"
-                + f" > ../datasets/quantized/{dataset}/output/{dataset}_{comp}.output"
-            )
-            os.rename(
-                f"../datasets/quantized/{dataset}/{dataset}.testlog",
-                f"../../comparators/nbit/hspice/logs/{dataset}_{comp}.testlog",
-            )
+
+def _train_categorical(n_bits: int) -> None:
     for dataset in CATEGORICAL:
         if not (Path(f"../datasets/raw/{dataset}/output/")).exists():
             (Path(f"../datasets/raw/{dataset}/output/")).mkdir()
@@ -119,11 +115,30 @@ def train(*, enable_build: bool = False) -> None:
         )
         for comp in FA_BASED + DEDICATED:
             os.system(
-                f"../build/full_approx/c5.0_{comp}_4b -f ../datasets/raw/{dataset}/{dataset}"
+                f"../build/full_approx/c5.0_{comp}_{n_bits}b -f ../datasets/raw/{dataset}/{dataset}"
                 + f" > ../datasets/raw/{dataset}/output/{dataset}_{comp}.output"
             )
             os.rename(
                 f"../datasets/raw/{dataset}/{dataset}.testlog",
+                f"../../comparators/nbit/hspice/logs/{dataset}_{comp}.testlog",
+            )
+
+
+def _train_continuous(n_bits: int) -> None:
+    for dataset in MIXED:
+        if not (Path(f"../datasets/raw/{dataset}/output/")).exists():
+            (Path(f"../datasets/raw/{dataset}/output/")).mkdir()
+        os.system(
+            f"../build/full_approx/c5.0_default -f ../datasets/quantized/{dataset}/{dataset}"
+            + f" > ../datasets/quantized/{dataset}/output/{dataset}_default.output"
+        )
+        for comp in FA_BASED + DEDICATED:
+            os.system(
+                f"../build/full_approx/c5.0_{comp}_{n_bits}b -f ../datasets/quantized/{dataset}/{dataset}"
+                + f" > ../datasets/quantized/{dataset}/output/{dataset}_{comp}.output"
+            )
+            os.rename(
+                f"../datasets/quantized/{dataset}/{dataset}.testlog",
                 f"../../comparators/nbit/hspice/logs/{dataset}_{comp}.testlog",
             )
 

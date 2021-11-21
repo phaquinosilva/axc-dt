@@ -1,5 +1,5 @@
 #include <stdlib.h>
-// #include <stdio.h>
+#include <stdio.h>
 #include "defns.i"
 
 /* DEFINICOES FA*/
@@ -206,8 +206,18 @@ int axdc6(int a, int b, int n)
     }
     int greater = 0;
     for (i = n / 4; i < n / 2; i++)
-        greater |= bin_b[i];
+        greater |= ~bin_b[i];
     for (i = n / 2; i < n; i++)
         greater |= g[i];
     return ~greater & 1;
 }
+
+// int main(int argc, char *argv)
+// {
+//     int diff_counter = 0;
+//     for (int i = 0; i < 16; i++)
+//         for (int j = 0; j < 16; j++)
+//             if (leq(i,j,ama2,8) != leq(i, j, ama2, 4))
+//                 diff_counter++;
+//     printf("%d\n", diff_counter);
+// }
