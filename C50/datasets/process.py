@@ -1,6 +1,7 @@
 from typing import Dict
 import pandas as pd
 import re
+from pathlib import Path
 
 # Comparators
 ADDERS = ["sma", "ama1", "ama2"]
@@ -64,8 +65,8 @@ def find_error_rates():
     train_rates = pd.concat(trainsets, axis=1, keys=CATEGORICAL+MIXED)
     print(test_rates)
     print(train_rates)
-    test_rates.to_csv(f"test_error_rates.csv")
-    train_rates.to_csv(f"train_error_rates.csv")
+    test_rates.to_csv(Path(__file__).parents[2] / f"test_error_rates.csv")
+    train_rates.to_csv(Path(__file__).parents[2] / f"train_error_rates.csv")
 
 if __name__ == "__main__":
     find_error_rates()

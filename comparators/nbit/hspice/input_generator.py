@@ -1,10 +1,10 @@
 """
-Voltage file input generator for C5.0 applications.
+Source voltage file input generator for C5.0 applications.
 Reads from a log file of the operands used during classification
 and provide SPICE files with PWL transitions for simulation.
 """
 
-from typing import Tuple
+from typing import Tuple, List
 from pathlib import Path
 
 
@@ -59,7 +59,24 @@ def write_source(
                     file.write("Vb%d b%d_in gnd PWL(0n vdd)\n" % (i, i))
 
 
-def create_input_sources(inputs_file: Path, saving_dir: Path, n: int) -> int:
+def count_repeated(input_file: Path) -> Tuple[List[int], List[int]]:
+    import subprocess
+
+    sort = subprocess.Popen(["sort", str(input_file)], stdout=subprocess.PIPE)
+    count = subprocess.check_output(["uniq", "-c"], stdin=sort.stdout)
+    unique = count.decode("utf-8")
+    unique = unique.split("\n")
+    pairs = []
+    for line in unique[:-1]:
+        num, values = line.split(" ")[-2:]
+        val1, val2 = values.split(",")
+        pairs.append((int(num), (int(float(val1)), int(float(val2)))))
+    return pairs
+
+
+def create_input_sources(
+    inputs_file: Path, saving_dir: Path, n: int, dataset: str
+) -> List[Tuple[int, Tuple[int, int]]]:
     """
     Creates sources for all inputs while simulating the energy consumption
     of an application.
@@ -75,13 +92,12 @@ def create_input_sources(inputs_file: Path, saving_dir: Path, n: int) -> int:
     """
     if not saving_dir.exists():
         saving_dir.mkdir()
-    contents = inputs_file.read_text().split("\n")
-    _int = lambda x: (int(float(x[0])), int(float(x[1])))
-    operations = [_int(operation.split(",")) for operation in contents[:-1]]
-    for num, operation in enumerate(operations):
+    repeated = count_repeated(input_file=inputs_file)
+    for id, pair in enumerate(repeated):
+        _, operation = pair
         write_source(
             after_state=operation,
             n=n,
-            saving_file=saving_dir / ("source_operation_%d.txt" % num),
+            saving_file=saving_dir / ("source_operation_%d.txt" % id),
         )
-    return len(operations)
+    return repeated

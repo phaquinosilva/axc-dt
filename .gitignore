@@ -1,16 +1,11 @@
 
 # folders
-__pycache__/
-build/
 8bit_adders/
+build/
 debug/
-.vscode/
 outputs/
 sources/
-
-# mypy
-.mypy_cache/
-.dmypy.json
+logs/
 
 # C5.0 outputs and mods
 *.info
@@ -25,8 +20,15 @@ sources/
 # TODO: Find a better suited file extension
 *.txt
 
+# python and IDE folders
+__pycache__/
+.vscode/
+.ipynb_checkpoints/
+.mypy_cache/
+.dmypy.json
+
 # Other
 *teste*
 *scope*
-*~
 *.png
+*.bak
