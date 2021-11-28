@@ -1,8 +1,12 @@
-from typing import Dict
+from typing import Dict, Tuple
 
 import numpy as np
 import pandas as pd
 from fxpmath import Fxp
+
+NUMERICAL = ["breast-cancer", "iris", "forest"]
+MIXED = ["adult", "heart-disease", "arrhythmia"]
+DATASETS = NUMERICAL + MIXED
 
 
 def process(dataset: str, bits: int = 8, signed: bool = False) -> None:
@@ -20,40 +24,68 @@ def process(dataset: str, bits: int = 8, signed: bool = False) -> None:
 
     """
     attributes = []
-    f = open("./raw/%s/%s.names" % (dataset, dataset), "r")
-    for line in f.readlines()[2:]:
-        attr_name, _ = line.split(":")
-        attr_name = attr_name.replace(" ", "")
-        attributes.append(attr_name)
-    # read dataset into dataframe
-    df = pd.read_csv("./raw/%s/%s.data" % (dataset, dataset), names=attributes)
-    col_min = make_training_values_positive(df)
-    info = quantize_training_values(dataset, df, bits, signed)
-    # try processing training values
+    attr_types = {}
+    with open("./raw/%s/%s.names" % (dataset, dataset), "r") as f:
+        for line in f.readlines()[2:]:
+            attr_name, attr_type = line.split(":")
+            attr_name = attr_name.replace(" ", "")
+            attributes.append(attr_name)
+            attr_types[attr_name] = (
+                "continuous" if "continuous" in attr_type else "categorical"
+            )
+    # print(attributes)
+    # print(attr_types)
+    # read training data into dataframe
+    train = pd.read_csv(
+        "./raw/%s/%s.data" % (dataset, dataset),
+        names=attributes,
+        na_values="?",
+        na_filter=True,
+    )
+    print(train)
+    # read test dataset into dataframe
     try:
-        test = pd.read_csv("./raw/%s/%s.test" % (dataset, dataset), names=attributes)
-        make_test_values_positive(test, col_min)
-        quantize_test_values(test, info, bits, signed)
-        test.to_csv(
-            "./quantized/%s/%s.test" % (dataset, dataset), header=False, index=False
+        test = pd.read_csv(
+            "./raw/%s/%s.test" % (dataset, dataset),
+            names=attributes,
+            na_values="?",
+            na_filter=True,
         )
     except FileNotFoundError:
         print("No test file found...")
-    finally:
-        df.to_csv(
-            "./quantized/%s/%s.data" % (dataset, dataset), header=False, index=False
-        )
+
+    if signed:
+        make_values_positive(train, test)
+    # print(train)
+    preprocess_values(name=dataset, train=train, test=test, bits=bits, signed=signed)
+
+    test.convert_dtypes().to_csv(
+        "./quantized/%s/%s.test" % (dataset, dataset),
+        header=False,
+        index=False,
+        na_rep="?",
+    )
+    train.convert_dtypes().to_csv(
+        "./quantized/%s/%s.data" % (dataset, dataset),
+        header=False,
+        index=False,
+        na_rep="?",
+    )
 
 
-def quantize_training_values(
-    name: str, df: "pd.DataFrame", bits: int, signed: bool = False
-) -> "pd.DataFrame":
+def preprocess_values(
+    name: str,
+    train: "pd.DataFrame",
+    test: "pd.DataFrame",
+    bits: int,
+    signed: bool = False,
+) -> Tuple["pd.DataFrame", "pd.DataFrame"]:
     """Quantize training values in dataset using a fraction that generates
     the least error in comparison with non quantized data.
 
     :param name:
         A string with the name of the dataset
-    :param df:
+    :param test:
         A DataFrame with the data read from .data file
     :param bits:
         An integer with the number of bits to be used in the target application
@@ -63,66 +95,89 @@ def quantize_training_values(
     :return:
         A DataFrame with the new quantized dataset to be written on a new .data file
     """
-    info: Dict = dict()
-    floats = [col for col in df if (str(df.dtypes[col]) == "float64")]
-    for col in floats:
-        info[col] = {}
-        min_erro = np.Inf
+    fraction: Dict = dict()
+    nums = [
+        col
+        for col in train
+        if (str(train.dtypes[col]) == "float64" or (str(train.dtypes[col]) == "int64"))
+    ]
+    # print(floats)
+    print(f"{len(nums)} columns to run quantization")
+    # Test if quantization is needed, rather than fixed point
+    for col in nums:
+        # print(train)
+        train_max = train[col].max()
+        test_max = max(test[col])
+
+        if train_max >= 2 ** bits or test_max >= 2 ** bits:
+            print(train_max)
+            print(test_max)
+            print()
+            print(f"running quantization on column {col}...")
+            n_shifts = lambda x: len(bin(int(x))[2:]) - bits
+            shifts = n_shifts(test_max) if test_max > train_max else n_shifts(train_max)
+            print(shifts)
+            fix_representation = lambda x: int(x) >> shifts
+            test[col] = (test[col]).map(fix_representation, na_action="ignore")
+            train[col] = (train[col]).map(fix_representation, na_action="ignore")
+            fraction[col] = {'size': None}
+
+    for col in nums:
+        if col in list(fraction.keys()):
+            print(f"skipping quantized column {col}")
+            continue
+        if col in train.select_dtypes("integer"):
+            print(f"skip integer column {col}")
+            continue
+        # Quantization will not be needed, use fixed point
+        min_error = np.Inf
         best_frac = 0
-        col_orig = df[col]
-        for frac_size in range(bits):
-            col_frac = col_orig.apply(
-                lambda x: Fxp(x, signed=signed, n_word=bits, n_frac=frac_size).get_val()
-            )
-            erro = (col_orig - col_frac) ** 2
-            if max(erro) < min_erro:
-                best_frac = frac_size
-                min_erro = max(erro)
-                info[col]["error"] = min_erro
-        int_col = col_orig.apply(
-            lambda x: int(
-                Fxp(x, signed=signed, n_word=bits, n_frac=best_frac).bin(), base=2
-            )
+        for frac_size in range(bits + 1):
+            for it, df in enumerate([train, test]):
+                # print(f"testing frac_size={frac_size} in {col}")
+                col_frac = df[col].map(
+                    lambda x: Fxp(
+                        x, signed=False, n_word=bits, n_frac=frac_size
+                    ).get_val(),
+                    na_action="ignore",
+                )
+                error = (df[col] - col_frac).sum() ** 2
+                if error < min_error:
+                    best_frac = frac_size
+                    min_error = error
+                    fraction[col] = {"error": min_error}
+        fix_rep = lambda x: int(
+            Fxp(x, signed=False, n_word=bits, n_frac=best_frac).bin(), base=2
         )
-        df[col] = int_col
-        info[col]["frac_size"] = best_frac
-    info_pd = pd.DataFrame(info)
-    info_pd.to_csv("./quantized/%s/%s.info" % (name, name))
-    return info
+        train[col] = train[col].map(fix_rep, na_action="ignore")
+        test[col] = test[col].map(fix_rep, na_action="ignore")
+        fraction[col] = {"size": best_frac}
 
 
-def quantize_test_values(
-    df: "pd.DataFrame", info: "pd.DataFrame", bits: int, signed: bool = False
-) -> None:
-    floats = [col for col in df if (str(df.dtypes[col]) == "float64")]
-    for col in floats:
-        best_frac = info[col]["frac_size"]
-        col_orig = df[col]
-        int_col = col_orig.apply(
-            lambda x: int(
-                Fxp(x, signed=signed, n_word=bits, n_frac=best_frac).bin(), base=2
-            )
-        )
-        df[col] = int_col
+    fraction_pd = pd.DataFrame(fraction)
+    fraction_pd.to_csv(f"./quantized/{name}/{name}.fraction")
+    return fraction
 
 
-def make_training_values_positive(df: "pd.DataFrame") -> Dict:
-    non_obj = [col for col in df if (str(df.dtypes[col]) != "object")]
+def make_values_positive(
+    train: "pd.DataFrame", test: "pd.DataFrame"
+) -> Dict[str, float]:
+    print("removing signed representation")
+    non_obj = [
+        col
+        for col in train
+        if (str(train.dtypes[col]) == "float64" or str(train.dtypes[col]) == "int64")
+    ]
     min_col = {}
     for col in non_obj:
-        if min(df[col]) < 0:
-            df[col] = df[col] - min(df[col])
-        min_col[col] = min(df[col])
-    return min_col
-
-
-def make_test_values_positive(df: "pd.DataFrame", min_col: Dict) -> None:
-    non_obj = [col for col in df if (str(df.dtypes[col]) != "object")]
-    for col in non_obj:
+        train_min = float(min(train[col]))
+        test_min = float(min(test[col]))
+        min_col[col] = train_min if train_min < test_min else test_min
         if min_col[col] < 0:
-            df[col] = df[col] - min_col
+            train[col] = train[col] - min_col[col]
+            test[col] = test[col] - min_col[col]
 
 
 if __name__ == "__main__":
-    name = input()
-    process(name)
+    for name in ['heart-disease']:
+        process(name, signed=True)

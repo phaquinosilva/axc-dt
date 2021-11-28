@@ -21,7 +21,7 @@ def process_comparators(name: str, *, enable_cleanup: bool = False) -> None:
     print(df)
     print()
     df.to_csv(
-        f"/home/pedro/Documents/ecl/ACxML/comparators/nbit/hspice/results/{name}_operation_results.csv"
+        f"{name}_operation_results.csv"
     )
 
 
@@ -33,7 +33,7 @@ def process_results(
     power_list = []
     n_ops = 0
 
-    data_path = Path(__file__).parents[3] 
+    data_path = Path(__file__).parents[3]
     with (data_path / f"C50/datasets/raw/{dataset}/{dataset}.test").open("r") as f:
         n_inputs = len(f.readlines())
     count = count_repeated(
@@ -44,7 +44,9 @@ def process_results(
         num, _ = pair
         n_ops += num
 
-        filename = Path(__file__).parent / f"outputs/{dataset}/result_{comparator}_{id}.csv"
+        filename = (
+            Path(__file__).parent / f"outputs/{dataset}/result_{comparator}_{id}.csv"
+        )
 
         res_df = pd.read_csv(filename, skiprows=3, na_values="failed")
         energy = abs(res_df["q_dut"].iloc[0] * NOMINAL_VOLTAGE)

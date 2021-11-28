@@ -197,7 +197,7 @@ def error_metrics_nbits(n_bits, comparator):
         for j in range(2 ** n_bits):
             if e_comp(i, j) != comparator(i, j, n_bits):
                 error_counter += 1
-    return {"ED": error_counter, "ER": 100 * error_counter / 2 ** (2*n_bits)}
+    return {"ED": error_counter, "ER": 100 * error_counter / 2 ** (2 * n_bits)}
 
 
 import pandas as pd
@@ -209,6 +209,7 @@ COMPARATOR_NAMES = [comparator.__name__ for comparator in COMPARATORS]
 rates_4b = []
 rates_8b = []
 import functools
+
 for comparator in COMPARATORS:
     # if comparator in ADDERS:
     #     rates_4b.append(pd.Series(error_metrics_nbits(4, comp)))

@@ -3,16 +3,13 @@ from pathlib import Path
 from typing import Dict
 
 import pandas as pd
+from quantizer import DATASETS
 
 # Comparators
 ADDERS = ["sma", "ama1", "ama2"]
 DEDICATED = ["edc", "axdc2", "axdc6"]
 DEFAULT = ["default"]
 COMPARATORS = DEFAULT + DEDICATED + ADDERS
-
-# Datasets
-CATEGORICAL = ["mushroom", "car", "kr-vs-kp", "splice", "tic-tac-toe"]
-MIXED = ["health", "iris", "forest"]
 
 
 def extract_rates(lines: str) -> Dict[str, float]:
@@ -25,31 +22,17 @@ def extract_rates(lines: str) -> Dict[str, float]:
             test_eval = lines[line_id + 6]
             # always after training data, so when we're done, break
             break
-    training_rate = extract_percentage(training_eval)
-    test_rate = extract_percentage(test_eval)
-    return training_rate, test_rate
+    training_acc = 100 - extract_percentage(training_eval)
+    test_acc = 100 - extract_percentage(test_eval)
+    return training_acc, test_acc
 
 
 # TODO: #2 Improve readability/maintainability of this function
-def find_error_rates(*, save_files: bool = False) -> None:
+def find_accuracy(*, save_files: bool = False) -> None:
     testsets = []
     trainsets = []
 
-    for set in CATEGORICAL:
-        test = {}
-        train = {}
-        for comparator in COMPARATORS:
-            with open(f"raw/{set}/output/{set}_{comparator}.output", "r") as f:
-                lines = f.readlines()
-            tr, te = extract_rates(lines)
-            train[comparator] = tr
-            test[comparator] = te
-        train = pd.Series(train)
-        test = pd.Series(test)
-        trainsets.append(train)
-        testsets.append(test)
-
-    for set in MIXED:
+    for set in DATASETS:
         test = {}
         train = {}
         for comparator in COMPARATORS:
@@ -61,13 +44,14 @@ def find_error_rates(*, save_files: bool = False) -> None:
         trainsets.append(train)
         testsets.append(test)
 
-    test_rates = pd.concat(testsets, axis=1, keys=CATEGORICAL + MIXED)
-    train_rates = pd.concat(trainsets, axis=1, keys=CATEGORICAL + MIXED)
+    test_rates = pd.concat(testsets, axis=1, keys=DATASETS)
+    train_rates = pd.concat(trainsets, axis=1, keys=DATASETS)
     if save_files:
-        test_rates.to_csv(Path(__file__).parents[2] / f"test_error_rates.csv")
-        train_rates.to_csv(Path(__file__).parents[2] / f"train_error_rates.csv")
+        test_rates.to_csv("test_error_rates.csv")
+        train_rates.to_csv("train_error_rates.csv")
     return test_rates, train_rates
 
+
 if __name__ == "__main__":
-    test, train = find_error_rates()
+    test, train = find_accuracy(save_files=True)
     print(test)

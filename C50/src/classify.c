@@ -126,7 +126,7 @@ void FindLeaf(DataRec Case, Tree T, Tree PT, float Fraction)
 		// @pedro: implementa aqui a chamada pra tua função
 		// @pedro: criação dos logs de comparação
 		if ( F = GetFile(LogFile, "a") ) {  /* Save values in comparison */
-			fprintf(F, "%d,%d\n", Dv, T->Forks);
+			fprintf(F, "DISCR,%d,%d\n", Dv, T->Forks);
 			fflush(F);
 			fclose(F);
 		}
@@ -186,7 +186,7 @@ void FindLeaf(DataRec Case, Tree T, Tree PT, float Fraction)
 		// @Pedro: aproximacao leq aqui
 		/* Save values in comparison */
 		if ( F = GetFile(LogFile, "a") ) {
-			fprintf(F, "%d,%d\n", Dv, MaxAttVal[T->Tested]);
+			fprintf(F, "DISCR,%d,%d\n", Dv, MaxAttVal[T->Tested]);
 			fflush(F);
 			fclose(F);
 		}
@@ -703,19 +703,19 @@ float Interpolate(Tree T, ContValue Val)
 
 	/* Save operators */
 	if ( F = GetFile(LogFile, "a") ) {
-			fprintf(F, "%f,%f\n", Val, T->Lower);
+			fprintf(F, "NUM,%f,%f\n", Val, T->Lower);
 			fflush(F);
 			fclose(F);
 	}
 	if ( !(Val <= T->Lower) )
 		if ( F = GetFile(LogFile, "a") ) {
-			fprintf(F, "%f,%f\n", T->Upper, Val);
+			fprintf(F, "NUM,%f,%f\n", T->Upper, Val);
 			fflush(F);
 			fclose(F);
 		}
 	else if ( !(T->Upper <= Val) )
 		if ( F = GetFile(LogFile, "a") ) {
-			fprintf(F, "%f,%f\n", Val, T->Mid);
+			fprintf(F, "NUM,%f,%f\n", Val, T->Mid);
 			fflush(F);
 			fclose(F);
 		}

@@ -44,6 +44,7 @@ def error_analysis(errors, names):
     print(error)
     return error
 
+
 def run_simulation():
     # compare approx adders and comparators with their exact counterparts on all possible outputs
     inputs = [
@@ -76,13 +77,14 @@ def run_simulation():
         # ranges_add.append(ranges[2])
     results_adders = pd.DataFrame(r_add)
     error_adders = error_analysis(pd.DataFrame(e_add), add_list)
-    results_adders.to_csv('results_adders.csv')
-    error_adders.to_csv('error_adders.csv')
+    results_adders.to_csv("results_adders.csv")
+    error_adders.to_csv("error_adders.csv")
     # results_dedicated = pd.DataFrame(r_ded)
     # error_dedicated = error_analysis(pd.DataFrame(e_ded), comp_names)
     # results_dedicated.to_csv("results_dedicated.csv")
     # pd.DataFrame(e_ded).to_csv("erros.csv")
     # error_dedicated.to_csv("error_dedicated.csv")
     # return pd.DataFrame(e_add), pd.DataFrame(e_ded)
+
 
 run_simulation()

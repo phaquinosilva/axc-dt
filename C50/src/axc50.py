@@ -1,16 +1,18 @@
 import os
 from pathlib import Path
-from typing import Sequence
+from typing import List
 
+# Comparators
 FA_BASED = ["sma", "ama1", "ama2"]
 DEDICATED = ["edc", "axdc2", "axdc6"]
 
-CATEGORICAL = ["mushroom", "car", "kr-vs-kp", "splice", "tic-tac-toe"]
-MIXED = ["health", "iris", "forest"]
+# Datasets
+NUMERICAL = ["breast-cancer", "iris", "forest"]
+MIXED = ["adult", "heart-disease", "arrhythmia"]
+DATASETS = NUMERICAL + MIXED
 
-ATTRIBUTE_TESTS = [
-    ("if ( Dv <= T->Forks )", "Dv", "T->Forks"),
-    ("if ( Dv <= MaxAttVal[T->Tested] )", "Dv", "MaxAttVal[T->Tested]"),
+# Approximated operations in C5.0
+CONTINUOUS_TESTS = [
     ("if ( !(Val <= T->Lower) )", "Val", "T->Lower"),
     ("else if ( !(T->Upper <= Val) )", "T->Upper", "Val"),
     ("if ( Val <= T->Lower )", "Val", "T->Lower"),
@@ -19,17 +21,17 @@ ATTRIBUTE_TESTS = [
 ]
 
 
-def build_fa_based(n_bits: int) -> None:
+def _build_fa_based(n_bits: int) -> None:
     """Build FA-based comparators C5.0 instances"""
     os.system("make")
-    os.rename("c5.0", "../build/full_approx/c5.0_default")
+    os.rename("c5.0", "../build/c5.0_default")
     for adder in FA_BASED:
         ## make approximate versions
         with open("classify.c", "r") as f:
             classify = f.read()
 
         replaced_lines = {}
-        for line, val1, val2 in ATTRIBUTE_TESTS:
+        for line, val1, val2 in CONTINUOUS_TESTS:
             new_line = f"if ( leq({val1}, {val2}, {adder}, {n_bits}) )"
             if "!" in line:
                 new_line = f"if ( !leq({val1}, {val2}, {adder}, {n_bits}) )"
@@ -43,11 +45,11 @@ def build_fa_based(n_bits: int) -> None:
             f.write(classify)
 
         os.system("make")
-        os.rename("c5.0", f"../build/full_approx/c5.0_{adder}_{n_bits}b")
+        os.rename("c5.0", f"../build/c5.0_{adder}_{n_bits}b")
 
         with open("classify.c", "r") as f:
             classify = f.read()
-        for line, _, _ in ATTRIBUTE_TESTS:
+        for line, _, _ in CONTINUOUS_TESTS:
             new_line = replaced_lines[line]
             classify = classify.replace(new_line, line)
         with open("classify.c", "w") as f:
@@ -55,14 +57,14 @@ def build_fa_based(n_bits: int) -> None:
             f.write(classify)
 
 
-def build_dedicated(n_bits: int) -> None:
+def _build_dedicated(n_bits: int) -> None:
     """Build Dedicated Comparators C5.0 instances"""
     for comp in DEDICATED:
         with open("classify.c", "r") as f:
             classify = f.read()
 
         replaced_lines = {}
-        for line, val1, val2 in ATTRIBUTE_TESTS:
+        for line, val1, val2 in CONTINUOUS_TESTS:
             new_line = f"if ( {comp}({val1}, {val2}, {n_bits}) )"
             if "!" in line:
                 new_line = f"if ( !{comp}({val1}, {val2}, {n_bits}) )"
@@ -75,11 +77,11 @@ def build_dedicated(n_bits: int) -> None:
                 f.write(classify)
 
         os.system("make")
-        os.rename("c5.0", f"../build/full_approx/c5.0_{comp}_{n_bits}b")
+        os.rename("c5.0", f"../build/c5.0_{comp}_{n_bits}b")
 
         with open("classify.c", "r") as f:
             classify = f.read()
-        for line, _, _ in ATTRIBUTE_TESTS:
+        for line, _, _ in CONTINUOUS_TESTS:
             new_line = replaced_lines[line]
             classify = classify.replace(new_line, line)
         classify.replace(new_line, line)
@@ -88,53 +90,17 @@ def build_dedicated(n_bits: int) -> None:
             f.write(classify)
 
 
-def train(
-    *,
-    n_bits: int = 8,
-    enable_build: bool = False,
-    dataset_type: Sequence[str] = ["CONTINUOUS", "CATEGORICAL"],
-) -> None:
-    if enable_build:
-        build_fa_based(n_bits=8)
-        build_dedicated(n_bits=8)
-        build_fa_based(n_bits=4)
-        build_dedicated(n_bits=4)
-    if "CONTINUOUS" in dataset_type:
-        _train_continuous(n_bits=8)
-    if "CATEGORICAL" in dataset_type:
-        _train_categorical(n_bits=4)
-
-
-def _train_categorical(n_bits: int) -> None:
-    for dataset in CATEGORICAL:
-        if not (Path(f"../datasets/raw/{dataset}/output/")).exists():
-            (Path(f"../datasets/raw/{dataset}/output/")).mkdir()
+def _train_datasets(datasets: List[str] = DATASETS, n_bits: int = 8) -> None:
+    for dataset in datasets:
+        if not (Path(f"../datasets/quantized/{dataset}/output/")).exists():
+            (Path(f"../datasets/quantized/{dataset}/output/")).mkdir()
         os.system(
-            f"../build/full_approx/c5.0_default -f ../datasets/raw/{dataset}/{dataset}"
-            + f" > ../datasets/raw/{dataset}/output/{dataset}_default.output"
-        )
-        for comp in FA_BASED + DEDICATED:
-            os.system(
-                f"../build/full_approx/c5.0_{comp}_{n_bits}b -f ../datasets/raw/{dataset}/{dataset}"
-                + f" > ../datasets/raw/{dataset}/output/{dataset}_{comp}.output"
-            )
-            os.rename(
-                f"../datasets/raw/{dataset}/{dataset}.testlog",
-                f"../../comparators/nbit/hspice/logs/{dataset}_{comp}.testlog",
-            )
-
-
-def _train_continuous(n_bits: int) -> None:
-    for dataset in MIXED:
-        if not (Path(f"../datasets/raw/{dataset}/output/")).exists():
-            (Path(f"../datasets/raw/{dataset}/output/")).mkdir()
-        os.system(
-            f"../build/full_approx/c5.0_default -f ../datasets/quantized/{dataset}/{dataset}"
+            f"../build/c5.0_default -f ../datasets/quantized/{dataset}/{dataset}"
             + f" > ../datasets/quantized/{dataset}/output/{dataset}_default.output"
         )
         for comp in FA_BASED + DEDICATED:
             os.system(
-                f"../build/full_approx/c5.0_{comp}_{n_bits}b -f ../datasets/quantized/{dataset}/{dataset}"
+                f"../build/c5.0_{comp}_{n_bits}b -f ../datasets/quantized/{dataset}/{dataset}"
                 + f" > ../datasets/quantized/{dataset}/output/{dataset}_{comp}.output"
             )
             os.rename(
@@ -143,5 +109,26 @@ def _train_continuous(n_bits: int) -> None:
             )
 
 
+def runner(
+    *,
+    n_bits: int = 8,
+    build: bool = False,
+    train: bool = True,
+) -> None:
+    if build:
+        _build_fa_based(n_bits=n_bits)
+        _build_dedicated(n_bits=n_bits)
+    if train:
+        _train_datasets(n_bits=n_bits)
+
+
 if __name__ == "__main__":
-    train(enable_build=True)
+    print('Build approximate versions? [y/N]')
+    build = False
+    train = True
+    if input() in ['y', 'yes', 'Y']:
+        build = True
+    print('Train approximate C5.0 versions in all datasets? [Y/n]')
+    if input() in ['n', 'no', 'N']:
+        train = False
+    runner(build=build, train=train)

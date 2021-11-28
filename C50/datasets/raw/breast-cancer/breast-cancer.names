@@ -1,0 +1,12 @@
+class.
+
+Age             : continuous.
+BMI             : continuous.
+Glucose         : continuous.
+Insulin         : continuous.
+HOMA            : continuous.
+Leptin          : continuous.
+Adiponectin     : continuous.
+Resistin        : continuous.
+MCP.1           : continuous.
+class  : 1,2.

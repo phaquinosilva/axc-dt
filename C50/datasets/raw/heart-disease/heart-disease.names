@@ -1,0 +1,16 @@
+class.
+
+age: continuous.
+sex: 1.0,0.0.
+cp: 1.0,2.0,3.0,4.0.
+trestbps: continuous.
+chol: continuous.
+fbs: 1.0,0.0.
+restecg: 0.0,1.0,2.0.
+thalach: continuous.
+exang :1.0,0.0.
+oldpeak: continuous.
+slope: 1.0,2.0,3.0.
+ca: continuous.
+thal : 3.0,6.0,7.0.
+class: 0,1,2,3,4.

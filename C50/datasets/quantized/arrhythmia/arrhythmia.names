@@ -1,0 +1,282 @@
+class.
+
+age: continuous.
+sex: 0, 1.
+height: continuous.
+Weight: continuous.
+QRS duration: continuous.
+P-R interval: continuous.
+Q-T interval: continuous.
+T interval: continuous.
+P interval: continuous.
+QRS: continuous.
+T: continuous.
+P: continuous.
+QRST: continuous.
+J: continuous.
+heart rate: continuous.
+DI Q wave avg width: continuous.
+DI R wave avg width: continuous.
+DI S wave avg width: continuous.
+DI R' wave avg width: continuous.
+DI S' wave avg width: continuous.
+DI deflections: continuous.
+DI ragged R wave avg width: 0,1.
+DI diphasic derivation of R wave avg width: 0,1.
+DI ragged P wave avg width: 0,1.
+DI diphasic derivation of P wave avg width: 0,1.
+DI ragged T wave avg width: 0,1.
+DI diphasic derivation of T wave avg width: 0,1.
+DII Q wave avg width: continuous.
+DII R wave avg width: continuous.
+DII S wave avg width: continuous.
+DII R' wave avg width: continuous.
+DII S' wave avg width: continuous.
+DII deflections: continuous.
+DII ragged R wave avg width: 0,1.
+DII diphasic derivation of R wave avg width: 0,1.
+DII ragged P wave avg width: 0,1.
+DII diphasic derivation of P wave avg width: 0,1.
+DII ragged T wave avg width: 0,1.
+DII diphasic derivation of T wave avg width: 0,1.
+DIII Q wave avg width: continuous.
+DIII R wave avg width: continuous.
+DIII S wave avg width: continuous.
+DIII R' wave avg width: continuous.
+DIII S' wave avg width: continuous.
+DIII deflections: continuous.
+DIII ragged R wave avg width: 0,1.
+DIII diphasic derivation of R wave avg width: 0,1.
+DIII ragged P wave avg width: 0,1.
+DIII diphasic derivation of P wave avg width: 0,1.
+DIII ragged T wave avg width: 0,1.
+DIII diphasic derivation of T wave avg width: 0,1.
+AVR Q wave avg width: continuous.
+AVR R wave avg width: continuous.
+AVR S wave avg width: continuous.
+AVR R' wave avg width: continuous.
+AVR S' wave avg width: continuous.
+AVR deflections: continuous.
+AVR ragged R wave avg width: 0,1.
+AVR diphasic derivation of R wave avg width: 0,1.
+AVR ragged P wave avg width: 0,1.
+AVR diphasic derivation of P wave avg width: 0,1.
+AVR ragged T wave avg width: 0,1.
+AVR diphasic derivation of T wave avg width: 0,1.
+AVL Q wave avg width: continuous.
+AVL R wave avg width: continuous.
+AVL S wave avg width: continuous.
+AVL R' wave avg width: continuous.
+AVL S' wave avg width: continuous.
+AVL deflections: continuous.
+AVL ragged R wave avg width: 0,1.
+AVL diphasic derivation of R wave avg width: 0,1.
+AVL ragged P wave avg width: 0,1.
+AVL diphasic derivation of P wave avg width: 0,1.
+AVL ragged T wave avg width: 0,1.
+AVL diphasic derivation of T wave avg width: 0,1.
+AVF Q wave avg width: continuous.
+AVF R wave avg width: continuous.
+AVF S wave avg width: continuous.
+AVF R' wave avg width: continuous.
+AVF S' wave avg width: continuous.
+AVF deflections: continuous.
+AVF ragged R wave avg width: 0,1.
+AVF diphasic derivation of R wave avg width: 0,1.
+AVF ragged P wave avg width: 0,1.
+AVF diphasic derivation of P wave avg width: 0,1.
+AVF ragged T wave avg width: 0,1.
+AVF diphasic derivation of T wave avg width: 0,1.
+V1 Q wave avg width: continuous.
+V1 R wave avg width: continuous.
+V1 S wave avg width: continuous.
+V1 R' wave avg width: continuous.
+V1 S' wave avg width: continuous.
+V1 deflections: continuous.
+V1 ragged R wave avg width: 0,1.
+V1 diphasic derivation of R wave avg width: 0,1.
+V1 ragged P wave avg width: 0,1.
+V1 diphasic derivation of P wave avg width: 0,1.
+V1 ragged T wave avg width: 0,1.
+V1 diphasic derivation of T wave avg width: 0,1.
+V2 Q wave avg width: continuous.
+V2 R wave avg width: continuous.
+V2 S wave avg width: continuous.
+V2 R' wave avg width: continuous.
+V2 S' wave avg width: continuous.
+V2 deflections: continuous.
+V2 ragged R wave avg width: 0,1.
+V2 diphasic derivation of R wave avg width: 0,1.
+V2 ragged P wave avg width: 0,1.
+V2 diphasic derivation of P wave avg width: 0,1.
+V2 ragged T wave avg width: 0,1.
+V2 diphasic derivation of T wave avg width: 0,1.
+V3 Q wave avg width: continuous.
+V3 R wave avg width: continuous.
+V3 S wave avg width: continuous.
+V3 R' wave avg width: continuous.
+V3 S' wave avg width: continuous.
+V3 deflections: continuous.
+V3 ragged R wave avg width: 0,1.
+V3 diphasic derivation of R wave avg width: 0,1.
+V3 ragged P wave avg width: 0,1.
+V3 diphasic derivation of P wave avg width: 0,1.
+V3 ragged T wave avg width: 0,1.
+V3 diphasic derivation of T wave avg width: 0,1.
+V4 Q wave avg width: continuous.
+V4 R wave avg width: continuous.
+V4 S wave avg width: continuous.
+V4 R' wave avg width: continuous.
+V4 S' wave avg width: continuous.
+V4 deflections: continuous.
+V4 ragged R wave avg width: 0,1.
+V4 diphasic derivation of R wave avg width: 0,1.
+V4 ragged P wave avg width: 0,1.
+V4 diphasic derivation of P wave avg width: 0,1.
+V4 ragged T wave avg width: 0,1.
+V4 diphasic derivation of T wave avg width: 0,1.
+V5 Q wave avg width: continuous.
+V5 R wave avg width: continuous.
+V5 S wave avg width: continuous.
+V5 R' wave avg width: continuous.
+V5 S' wave avg width: continuous.
+V5 deflections: continuous.
+V5 ragged R wave avg width: 0,1.
+V5 diphasic derivation of R wave avg width: 0,1.
+V5 ragged P wave avg width: 0,1.
+V5 diphasic derivation of P wave avg width: 0,1.
+V5 ragged T wave avg width: 0,1.
+V5 diphasic derivation of T wave avg width: 0,1.
+V6 Q wave avg width: continuous.
+V6 R wave avg width: continuous.
+V6 S wave avg width: continuous.
+V6 R' wave avg width: continuous.
+V6 S' wave avg width: continuous.
+V6 deflections: continuous.
+V6 ragged R wave avg width: 0,1.
+V6 diphasic derivation of R wave avg width: 0,1.
+V6 ragged P wave avg width: 0,1.
+V6 diphasic derivation of P wave avg width: 0,1.
+V6 ragged T wave avg width: 0,1.
+V6 diphasic derivation of T wave avg width: 0,1.
+DI JJ wave amplitude: continuous.
+DI Q wave amplitude: continuous.
+DI R wave amplitude: continuous.
+DI S wave amplitude: continuous.
+DI R' wave amplitude: continuous.
+DI S' wave amplitude: continuous.
+DI P wave amplitude: continuous.
+DI T wave amplitude: continuous.
+DI QRSA: continuous.
+DI QRSTA: continuous.
+DII JJ wave amplitude: continuous.
+DII Q wave amplitude: continuous.
+DII R wave amplitude: continuous.
+DII S wave amplitude: continuous.
+DII R' wave amplitude: continuous.
+DII S' wave amplitude: continuous.
+DII P wave amplitude: continuous.
+DII T wave amplitude: continuous.
+DII QRSA: continuous.
+DII QRSTA: continuous.
+DIII JJ wave amplitude: continuous.
+DIII Q wave amplitude: continuous.
+DIII R wave amplitude: continuous.
+DIII S wave amplitude: continuous.
+DIII R' wave amplitude: continuous.
+DIII S' wave amplitude: continuous.
+DIII P wave amplitude: continuous.
+DIII T wave amplitude: continuous.
+DIII QRSA: continuous.
+DIII QRSTA: continuous.
+AVR JJ wave amplitude: continuous.
+AVR Q wave amplitude: continuous.
+AVR R wave amplitude: continuous.
+AVR S wave amplitude: continuous.
+AVR R' wave amplitude: continuous.
+AVR S' wave amplitude: continuous.
+AVR P wave amplitude: continuous.
+AVR T wave amplitude: continuous.
+AVR QRSA: continuous.
+AVR QRSTA: continuous.
+AVL JJ wave amplitude: continuous.
+AVL Q wave amplitude: continuous.
+AVL R wave amplitude: continuous.
+AVL S wave amplitude: continuous.
+AVL R' wave amplitude: continuous.
+AVL S' wave amplitude: continuous.
+AVL P wave amplitude: continuous.
+AVL T wave amplitude: continuous.
+AVL QRSA: continuous.
+AVL QRSTA: continuous.
+AVF JJ wave amplitude: continuous.
+AVF Q wave amplitude: continuous.
+AVF R wave amplitude: continuous.
+AVF S wave amplitude: continuous.
+AVF R' wave amplitude: continuous.
+AVF S' wave amplitude: continuous.
+AVF P wave amplitude: continuous.
+AVF T wave amplitude: continuous.
+AVF QRSA: continuous.
+AVF QRSTA: continuous.
+V1 JJ wave amplitude: continuous.
+V1 Q wave amplitude: continuous.
+V1 R wave amplitude: continuous.
+V1 S wave amplitude: continuous.
+V1 R' wave amplitude: continuous.
+V1 S' wave amplitude: continuous.
+V1 P wave amplitude: continuous.
+V1 T wave amplitude: continuous.
+V1 QRSA: continuous.
+V1 QRSTA: continuous.
+V2 JJ wave amplitude: continuous.
+V2 Q wave amplitude: continuous.
+V2 R wave amplitude: continuous.
+V2 S wave amplitude: continuous.
+V2 R' wave amplitude: continuous.
+V2 S' wave amplitude: continuous.
+V2 P wave amplitude: continuous.
+V2 T wave amplitude: continuous.
+V2 QRSA: continuous.
+V2 QRSTA: continuous.
+V3 JJ wave amplitude: continuous.
+V3 Q wave amplitude: continuous.
+V3 R wave amplitude: continuous.
+V3 S wave amplitude: continuous.
+V3 R' wave amplitude: continuous.
+V3 S' wave amplitude: continuous.
+V3 P wave amplitude: continuous.
+V3 T wave amplitude: continuous.
+V3 QRSA: continuous.
+V3 QRSTA: continuous.
+V4 JJ wave amplitude: continuous.
+V4 Q wave amplitude: continuous.
+V4 R wave amplitude: continuous.
+V4 S wave amplitude: continuous.
+V4 R' wave amplitude: continuous.
+V4 S' wave amplitude: continuous.
+V4 P wave amplitude: continuous.
+V4 T wave amplitude: continuous.
+V4 QRSA: continuous.
+V4 QRSTA: continuous.
+V5 JJ wave amplitude: continuous.
+V5 Q wave amplitude: continuous.
+V5 R wave amplitude: continuous.
+V5 S wave amplitude: continuous.
+V5 R' wave amplitude: continuous.
+V5 S' wave amplitude: continuous.
+V5 P wave amplitude: continuous.
+V5 T wave amplitude: continuous.
+V5 QRSA: continuous.
+V5 QRSTA: continuous.
+V6 JJ wave amplitude: continuous.
+V6 Q wave amplitude: continuous.
+V6 R wave amplitude: continuous.
+V6 S wave amplitude: continuous.
+V6 R' wave amplitude: continuous.
+V6 S' wave amplitude: continuous.
+V6 P wave amplitude: continuous.
+V6 T wave amplitude: continuous.
+V6 QRSA: continuous.
+V6 QRSTA: continuous.
+class: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16.

@@ -9,10 +9,10 @@ from typing import List, Tuple
 
 
 def write_source(
-    after_state: Tuple[int, int],
-    n: int,
     saving_file: Path,
+    after_state: Tuple[int, int],
     before_state: Tuple[int, int] = (0, 0),
+    n: int = 8,
 ) -> None:
     """
     Writes PWL to sources file
@@ -69,7 +69,9 @@ def count_repeated(input_file: Path) -> Tuple[List[int], List[int]]:
     pairs = []
     for line in unique[:-1]:
         num, values = line.split(" ")[-2:]
-        val1, val2 = values.split(",")
+        _type, val1, val2 = values.split(",")
+        if _type != "NUM":
+            continue
         pairs.append((int(num), (int(float(val1)), int(float(val2)))))
     return pairs
 

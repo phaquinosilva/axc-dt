@@ -7,9 +7,10 @@ ADDERS = ["sma", "ama1", "ama2"]
 DEDICATED = ["edc", "axdc2", "axdc6"]
 COMPARATORS = ADDERS + DEDICATED
 
-CATEGORICAL = ["mushroom", "car", "kr-vs-kp", "splice", "tic-tac-toe"]
-MIXED = ["health", "iris", "forest"]
-DATASETS = CATEGORICAL + MIXED
+# Datasets
+NUMERICAL = ["breast-cancer", "iris", "forest"]
+MIXED = ["adult", "heart-disease", "arrhythmia"]
+DATASETS = NUMERICAL + MIXED
 
 
 def simulate_operations(name: str, n_bits: int) -> None:
@@ -25,11 +26,12 @@ def simulate_operations(name: str, n_bits: int) -> None:
             inputs_file=Path(__file__).parent / f"logs/{name}_{circuit}.testlog",
             saving_dir=Path(__file__).parent / "sources",
             n=n_bits,
+            dataset=name,
         )
         num_samples = len(op_list)
         total_simulations += num_samples
-        for i in range(num_samples):
-            run_simulation(comparator=circuit, op_index=i, n_bits=n_bits, dataset=name)
+        # for i in range(num_samples):
+        # run_simulation(comparator=circuit, op_index=i, n_bits=n_bits, dataset=name)
     return total_simulations
 
 
@@ -76,8 +78,8 @@ def run_simulation(comparator: str, op_index: int, n_bits: int, dataset: str) ->
     with open("circuit.cir", "w") as f:
         f.seek(0)
         f.write(contents)
-    if not (Path(__file__) / f"outputs/{dataset}").exists():
-        (Path(__file__) / f"outputs/{dataset}").mkdir()
+    if not (Path(__file__).parent / f"outputs/{dataset}").exists():
+        (Path(__file__).parent / f"outputs/{dataset}").mkdir()
     os.rename(
         "./circuit.mt0.csv",
         f"outputs/{dataset}/result_{comparator}_{op_index}.csv",
@@ -86,8 +88,6 @@ def run_simulation(comparator: str, op_index: int, n_bits: int, dataset: str) ->
 
 if __name__ == "__main__":
     total_simulations = 0
-    for dataset in CATEGORICAL:
-        total_simulations += simulate_operations(dataset, 4)
-    for dataset in MIXED:
+    for dataset in DATASETS:
         total_simulations += simulate_operations(dataset, 8)
-    print(total_simulations)
+    print(total_simulations * 0.9 // 3600)

@@ -117,7 +117,7 @@ def spicegen_axdc6(n):
     f.write("   Xleq gr leq vdd inv\n.ends")
     f.close()
 
-spicegen_axdc6(4)
+
 def spicegen_adder(adder, n):
     """
     Generates SPICE for full adder based comparators (use ripple carry architecture)
