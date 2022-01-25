@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict
 
 import pandas as pd
-from quantizer import DATASETS
+from C50.datasets.quantizer import DATASETS
 
 # Comparators
 ADDERS = ["sma", "ama1", "ama2"]
@@ -11,8 +11,11 @@ DEDICATED = ["edc", "axdc2", "axdc6"]
 DEFAULT = ["default"]
 COMPARATORS = DEFAULT + DEDICATED + ADDERS
 
+FILE_DIR = Path(__file__).parent
+C50_DIR = Path(__file__).parents[1]
+TOP_DIR = Path(__file__).parents[2]
 
-def extract_rates(lines: str) -> Dict[str, float]:
+def extract_accuracy(lines: str) -> Dict[str, float]:
     """Finds error rates in file"""
     extract_percentage = lambda x: float(re.findall("\d+\.\d", x)[0])
     for line_id, line in enumerate(lines):
@@ -28,7 +31,7 @@ def extract_rates(lines: str) -> Dict[str, float]:
 
 
 # TODO: #2 Improve readability/maintainability of this function
-def find_accuracy(*, save_files: bool = False) -> None:
+def process_results(*, save_files: bool = False) -> None:
     testsets = []
     trainsets = []
 
@@ -36,9 +39,9 @@ def find_accuracy(*, save_files: bool = False) -> None:
         test = {}
         train = {}
         for comparator in COMPARATORS:
-            with open(f"quantized/{set}/output/{set}_{comparator}.output", "r") as f:
+            with (FILE_DIR / f"quantized/{set}/output/{set}_{comparator}.output").open('r') as f:
                 lines = f.readlines()
-            train[comparator], test[comparator] = extract_rates(lines)
+            train[comparator], test[comparator] = extract_accuracy(lines)
         train = pd.Series(train)
         test = pd.Series(test)
         trainsets.append(train)
@@ -47,11 +50,11 @@ def find_accuracy(*, save_files: bool = False) -> None:
     test_rates = pd.concat(testsets, axis=1, keys=DATASETS)
     train_rates = pd.concat(trainsets, axis=1, keys=DATASETS)
     if save_files:
-        test_rates.to_csv("test_error_rates.csv")
-        train_rates.to_csv("train_error_rates.csv")
+        test_rates.to_csv(TOP_DIR / "outputs/test_accuracy.csv")
+        train_rates.to_csv(TOP_DIR / "outputs/train_accuracy.csv")
     return test_rates, train_rates
 
 
 if __name__ == "__main__":
-    test, train = find_accuracy(save_files=True)
-    print(test)
+    test, train = process_results(save_files=True)
+    print(f"Test accuracy:\n{test}")

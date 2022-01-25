@@ -20,6 +20,8 @@ CONTINUOUS_TESTS = [
     ("else if ( Val <= T->Mid )", "Val", "T->Mid"),
 ]
 
+C50_DIR = Path(__file__).parents[1]
+TOP_DIR = Path(__file__).parents[2]
 
 def _build_fa_based(n_bits: int) -> None:
     """Build FA-based comparators C5.0 instances"""
@@ -92,20 +94,20 @@ def _build_dedicated(n_bits: int) -> None:
 
 def _train_datasets(datasets: List[str] = DATASETS, n_bits: int = 8) -> None:
     for dataset in datasets:
-        if not (Path(f"../datasets/quantized/{dataset}/output/")).exists():
-            (Path(f"../datasets/quantized/{dataset}/output/")).mkdir()
+        if not (C50_DIR / f"datasets/quantized/{dataset}/output/").exists():
+            (C50_DIR / f"datasets/quantized/{dataset}/output/").mkdir()
         os.system(
-            f"../build/c5.0_default -f ../datasets/quantized/{dataset}/{dataset}"
-            + f" > ../datasets/quantized/{dataset}/output/{dataset}_default.output"
+            f"{C50_DIR.absolute()}/build/c5.0_default -f {C50_DIR.absolute()}/datasets/quantized/{dataset}/{dataset}"
+            + f" > {C50_DIR.absolute()}/datasets/quantized/{dataset}/output/{dataset}_default.output"
         )
         for comp in FA_BASED + DEDICATED:
             os.system(
-                f"../build/c5.0_{comp}_{n_bits}b -f ../datasets/quantized/{dataset}/{dataset}"
-                + f" > ../datasets/quantized/{dataset}/output/{dataset}_{comp}.output"
+                f"{C50_DIR.absolute()}/build/c5.0_{comp}_{n_bits}b -f {C50_DIR.absolute()}/datasets/quantized/{dataset}/{dataset}"
+                + f" > {C50_DIR.absolute()}/datasets/quantized/{dataset}/output/{dataset}_{comp}.output"
             )
             os.rename(
-                f"../datasets/quantized/{dataset}/{dataset}.testlog",
-                f"../../comparators/nbit/hspice/logs/{dataset}_{comp}.testlog",
+                f"{C50_DIR.absolute()}/datasets/quantized/{dataset}/{dataset}.testlog",
+                f"{TOP_DIR.absolute()}/comparators/n_bit/hspice/logs/{dataset}_{comp}.testlog",
             )
 
 

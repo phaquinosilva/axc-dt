@@ -11,7 +11,6 @@ CFLAGS = -g -Wall -DVerbOpt -O0
 LFLAGS = $(S)
 SHELL  = /bin/csh
 
-
 #	Definitions of file sets
 #	New file ordering suggested by gprof
 

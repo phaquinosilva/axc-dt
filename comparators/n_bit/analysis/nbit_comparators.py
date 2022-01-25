@@ -91,8 +91,8 @@ def n_edc(a: int, b: int, n: int) -> int:
     return ~greater & 1 == 1
 
 
-def n_adc2(a: int, b: int, n: int) -> int:
-    """Approximate Dedicated Comparator 2 (ADC2)"""
+def n_axdc2(a: int, b: int, n: int) -> int:
+    """Approximate Dedicated Comparator 2 (AxDC2)"""
     # formatting stuff
     a = format(a, "#0%db" % (n + 2))[:1:-1]
     b = format(b, "#0%db" % (n + 2))[:1:-1]
@@ -116,7 +116,7 @@ def n_adc2(a: int, b: int, n: int) -> int:
     return ~greater & 1 == 1
 
 
-def n_adc6(a: int, b: int, n: int) -> int:
+def n_axdc6(a: int, b: int, n: int) -> int:
     """Approximate Dedicated Comparator 6 (ADC6)"""
     # formatting stuff
     a = format(a, "#0%db" % (n + 2))[:1:-1]
