@@ -12,16 +12,15 @@ SIMULATION_TIME = 2.5e-9
 
 def process_comparators(name: str, *, enable_cleanup: bool = False) -> None:
     results = {}
+    result_dir = Path(__file__).parents[3] / "results/"
     for circuit in COMPARATORS:
         results[circuit] = process_results(circuit, name, enable_cleanup=enable_cleanup)
-    if not (Path(__file__).parent / "results/").exists():
-        (Path(__file__).parent / "results/").mkdir()
+    if not result_dir.exists():
+        result_dir.mkdir()
     df = pd.DataFrame(results).transpose()
-    print(f"{name}:")
-    print(df)
-    print()
+    print(f"{name}:\n{df}\n")
     df.to_csv(
-        f"{name}_operation_results.csv"
+        result_dir / f"{name}_operation_results.csv"
     )
 
 

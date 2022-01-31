@@ -1,11 +1,13 @@
 
 # folders
 8bit_adders/
-build/
+builds/
 debug/
-outputs/
+*outputs/
 sources/
-logs/
+*logs/
+quantized/
+*results/
 
 # C5.0 outputs and mods
 *.info
@@ -15,6 +17,10 @@ logs/
 *.output
 *.tmp
 *.o
+
+
+# Python outputs
+*.csv
 
 # Generated temporary or simulation-specific HSPICE files
 # TODO: Find a better suited file extension

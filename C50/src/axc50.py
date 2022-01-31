@@ -26,7 +26,7 @@ TOP_DIR = Path(__file__).parents[2]
 def _build_fa_based(n_bits: int) -> None:
     """Build FA-based comparators C5.0 instances"""
     os.system("make")
-    os.rename("c5.0", "../build/c5.0_default")
+    os.rename("c5.0", "../builds/c5.0_default")
     for adder in FA_BASED:
         ## make approximate versions
         with open("classify.c", "r") as f:
@@ -47,7 +47,7 @@ def _build_fa_based(n_bits: int) -> None:
             f.write(classify)
 
         os.system("make")
-        os.rename("c5.0", f"../build/c5.0_{adder}_{n_bits}b")
+        os.rename("c5.0", f"../builds/c5.0_{adder}_{n_bits}b")
 
         with open("classify.c", "r") as f:
             classify = f.read()
@@ -79,7 +79,7 @@ def _build_dedicated(n_bits: int) -> None:
                 f.write(classify)
 
         os.system("make")
-        os.rename("c5.0", f"../build/c5.0_{comp}_{n_bits}b")
+        os.rename("c5.0", f"../builds/c5.0_{comp}_{n_bits}b")
 
         with open("classify.c", "r") as f:
             classify = f.read()
@@ -97,12 +97,12 @@ def _train_datasets(datasets: List[str] = DATASETS, n_bits: int = 8) -> None:
         if not (C50_DIR / f"datasets/quantized/{dataset}/output/").exists():
             (C50_DIR / f"datasets/quantized/{dataset}/output/").mkdir()
         os.system(
-            f"{C50_DIR.absolute()}/build/c5.0_default -f {C50_DIR.absolute()}/datasets/quantized/{dataset}/{dataset}"
+            f"{C50_DIR.absolute()}/builds/c5.0_default -f {C50_DIR.absolute()}/datasets/quantized/{dataset}/{dataset}"
             + f" > {C50_DIR.absolute()}/datasets/quantized/{dataset}/output/{dataset}_default.output"
         )
         for comp in FA_BASED + DEDICATED:
             os.system(
-                f"{C50_DIR.absolute()}/build/c5.0_{comp}_{n_bits}b -f {C50_DIR.absolute()}/datasets/quantized/{dataset}/{dataset}"
+                f"{C50_DIR.absolute()}/builds/c5.0_{comp}_{n_bits}b -f {C50_DIR.absolute()}/datasets/quantized/{dataset}/{dataset}"
                 + f" > {C50_DIR.absolute()}/datasets/quantized/{dataset}/output/{dataset}_{comp}.output"
             )
             os.rename(

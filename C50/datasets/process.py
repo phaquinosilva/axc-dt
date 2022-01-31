@@ -50,11 +50,14 @@ def process_results(*, save_files: bool = False) -> None:
     test_rates = pd.concat(testsets, axis=1, keys=DATASETS)
     train_rates = pd.concat(trainsets, axis=1, keys=DATASETS)
     if save_files:
-        test_rates.to_csv(TOP_DIR / "outputs/test_accuracy.csv")
-        train_rates.to_csv(TOP_DIR / "outputs/train_accuracy.csv")
+        test_rates.to_csv(TOP_DIR / "results/test_accuracy.csv")
+        train_rates.to_csv(TOP_DIR / "results/train_accuracy.csv")
+    
+    print(f"Train accuracy:\n{train_rates}")
+    print(f"Test accuracy:\n{test_rates}")
+    
     return test_rates, train_rates
 
 
 if __name__ == "__main__":
     test, train = process_results(save_files=True)
-    print(f"Test accuracy:\n{test}")
