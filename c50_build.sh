@@ -1,0 +1,1 @@
+exec make -C C50/src/

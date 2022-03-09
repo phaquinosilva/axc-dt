@@ -1,6 +1,6 @@
 from C50.datasets.process import process_results
 from C50.datasets.quantizer import DATASETS, preprocess
-from C50.src.axc50 import runner
+from C50.src.axc50 import build, train
 
 YES = ['y', 'yes', 'Y']
 NO = ['n', 'no', 'N']
@@ -15,18 +15,14 @@ if __name__ == "__main__":
         for dataset in DATASETS:
             preprocess(dataset)
             
-    print('Build approximate versions? [y/N]')
+    print('Build approximate C5.0 versions? [y/N]')
     if input() in YES:
-        enable_build = True
+        build(n_bits=8)
 
     print('Train approximate C5.0 versions in all datasets? [Y/n]')
-    if input() in NO:
-        enable_train = False
-    
-    print('Save results? [Y/n]')
-    if input() in NO:
-        enable_save = False
+    if input() not in NO:
+        train(n_bits=8)
 
-    
-    runner(build=enable_build, train=enable_train)
-    process_results(save_files=enable_save)
+    print('Process and save results? [Y/n]')
+    if input() not in NO:
+        process_results(save_files=True)

@@ -1,9 +1,10 @@
-from math import floor
+from math import floor, ceil
 from pathlib import Path
 from typing import Dict
+from shutil import copy2
+
 import numpy as np
 import pandas as pd
-from pyparsing import ZeroOrMore
 
 NUMERICAL = ["breast-cancer", "iris", "forest"]
 MIXED = ["adult", "heart-disease", "arrhythmia"]
@@ -56,8 +57,29 @@ def preprocess(dataset: str, bits: int = 8, signed: bool = False) -> None:
         ("No test file found...")
 
     print(dataset)
-    scale_data(train, test, attr_types)
-    # print(test)
+    info = scale_data(train, test, attr_types)
+
+    (FILE_DIR / "quantized").mkdir(parents=True, exist_ok=True)
+    (FILE_DIR / f"./quantized/{dataset}").mkdir(parents=True, exist_ok=True)
+
+    test.convert_dtypes().to_csv(
+        FILE_DIR / f"./quantized/{dataset}/{dataset}_scaled.test",
+        header=False,
+        index=False,
+        na_rep="?",
+    )
+    train.convert_dtypes().to_csv(
+        FILE_DIR / f"./quantized/{dataset}/{dataset}_scaled.data",
+        header=False,
+        index=False,
+        na_rep="?",
+    )
+    
+    for attribute in attributes:
+        if attr_types[attribute] == 'continuous':
+            train[attribute] = pd.Series(map(lambda x: floor(x) if not np.isnan(x) else np.nan, train[attribute]))
+            test[attribute] = pd.Series(map(lambda x: floor(x) if not np.isnan(x) else np.nan, test[attribute]))
+
     test.convert_dtypes().to_csv(
         FILE_DIR / f"./quantized/{dataset}/{dataset}.test",
         header=False,
@@ -71,15 +93,29 @@ def preprocess(dataset: str, bits: int = 8, signed: bool = False) -> None:
         na_rep="?",
     )
 
+    info.convert_dtypes().to_csv(FILE_DIR / f"./quantized/{dataset}/{dataset}.info",)
 
-def scale_data(train: "pd.DataFrame", test: "pd.DataFrame", attribute_type: Dict[str, str]) -> "pd.DataFrame":
-    numeric = [
-        col
-        for col in train
-        if (str(train.dtypes[col]) == "float64" or (str(train.dtypes[col]) == "int64"))
-    ]
-    for col in numeric:
-        if attribute_type[col] == 'categorical':
+    if not (FILE_DIR / f"quantized/{dataset}/{dataset}.names").exists():
+        copy2(
+            FILE_DIR / f"raw/{dataset}/{dataset}.names",
+            FILE_DIR / f"quantized/{dataset}/{dataset}.names",
+        )
+    
+    if not (FILE_DIR / f"quantized/{dataset}/{dataset}_scaled.names").exists():
+        copy2(
+            FILE_DIR / f"raw/{dataset}/{dataset}.names",
+            FILE_DIR / f"quantized/{dataset}/{dataset}_scaled.names",
+        )
+
+
+def scale_data(
+    train: "pd.DataFrame", test: "pd.DataFrame", attribute_type: Dict[str, str]
+) -> "pd.DataFrame":
+    ranges = []
+    name = []
+    for col in train:
+        # data can only be continuous or categorical -- we're only interested in continuous data
+        if attribute_type[col] == "categorical":
             continue
         xmin = train[col].min()
         xmax = train[col].max()
@@ -87,16 +123,23 @@ def scale_data(train: "pd.DataFrame", test: "pd.DataFrame", attribute_type: Dict
             xmin = test[col].min()
         if test[col].max() > xmax:
             xmax = test[col].max()
-        if xmin == xmax and xmax < 2**8:
+        if xmin == xmax:
             continue
 
+        range = xmax - xmin
+        nbits = ceil(np.log2(range))
+
+        ranges.append({"range": range, "nbits": nbits})
+        name.append(col)
+
         scale = (
-            lambda x: floor((x - xmin) * 2 ** 8 / (xmax - xmin))
+            lambda x: (x - xmin) * (2 ** 8 - 1) / (xmax - xmin)
             if not np.isnan(x)
             else np.nan
         )
         train[col] = pd.Series(map(scale, train[col]))
         test[col] = pd.Series(map(scale, test[col]))
+    return pd.DataFrame(ranges, index=name)
 
 
 if __name__ == "__main__":

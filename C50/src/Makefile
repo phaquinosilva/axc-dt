@@ -9,7 +9,7 @@
 CC	= gcc -ffloat-store
 CFLAGS = -g -Wall -DVerbOpt -O0
 LFLAGS = $(S)
-SHELL  = /bin/csh
+SHELL  = /bin/bash
 
 #	Definitions of file sets
 #	New file ordering suggested by gprof
