@@ -1,0 +1,13 @@
+name: axc-dt
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9.12
+  - numpy=1.21.6
+  - pandas=1.4.2
+  - black=22.3.0
+  - joblib=1.1.0
+  - pytest=7.1.2
+  - mypy=0.950
+  - matplotlib

@@ -57,7 +57,8 @@ def approximate_c50(
                 f.seek(0)
                 f.write(classify)
 
-approximate_c50('axdc6', 8, enable_build=True)
+
+approximate_c50("axdc6", 8, enable_build=True)
 
 
 def _train_categorical(n_bits: int) -> None:

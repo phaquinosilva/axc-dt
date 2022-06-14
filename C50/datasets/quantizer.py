@@ -1,7 +1,7 @@
-from math import floor, ceil
+from math import ceil, floor
 from pathlib import Path
-from typing import Dict
 from shutil import copy2
+from typing import Dict
 
 import numpy as np
 import pandas as pd
@@ -74,11 +74,15 @@ def preprocess(dataset: str, bits: int = 8, signed: bool = False) -> None:
         index=False,
         na_rep="?",
     )
-    
+
     for attribute in attributes:
-        if attr_types[attribute] == 'continuous':
-            train[attribute] = pd.Series(map(lambda x: floor(x) if not np.isnan(x) else np.nan, train[attribute]))
-            test[attribute] = pd.Series(map(lambda x: floor(x) if not np.isnan(x) else np.nan, test[attribute]))
+        if attr_types[attribute] == "continuous":
+            train[attribute] = pd.Series(
+                map(lambda x: floor(x) if not np.isnan(x) else np.nan, train[attribute])
+            )
+            test[attribute] = pd.Series(
+                map(lambda x: floor(x) if not np.isnan(x) else np.nan, test[attribute])
+            )
 
     test.convert_dtypes().to_csv(
         FILE_DIR / f"./quantized/{dataset}/{dataset}.test",
@@ -93,14 +97,16 @@ def preprocess(dataset: str, bits: int = 8, signed: bool = False) -> None:
         na_rep="?",
     )
 
-    info.convert_dtypes().to_csv(FILE_DIR / f"./quantized/{dataset}/{dataset}.info",)
+    info.convert_dtypes().to_csv(
+        FILE_DIR / f"./quantized/{dataset}/{dataset}.info",
+    )
 
     if not (FILE_DIR / f"quantized/{dataset}/{dataset}.names").exists():
         copy2(
             FILE_DIR / f"raw/{dataset}/{dataset}.names",
             FILE_DIR / f"quantized/{dataset}/{dataset}.names",
         )
-    
+
     if not (FILE_DIR / f"quantized/{dataset}/{dataset}_scaled.names").exists():
         copy2(
             FILE_DIR / f"raw/{dataset}/{dataset}.names",
@@ -133,7 +139,7 @@ def scale_data(
         name.append(col)
 
         scale = (
-            lambda x: (x - xmin) * (2 ** 8 - 1) / (xmax - xmin)
+            lambda x: (x - xmin) * (2**8 - 1) / (xmax - xmin)
             if not np.isnan(x)
             else np.nan
         )

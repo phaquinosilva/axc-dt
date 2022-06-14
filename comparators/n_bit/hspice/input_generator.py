@@ -8,12 +8,8 @@ from pathlib import Path
 from typing import List, Tuple
 
 
-def write_source(
-    saving_file: Path,
-    after_state: Tuple[int, int],
-    before_state: Tuple[int, int] = (0, 0),
-    n: int = 8,
-) -> None:
+def write_source(saving_file: Path, after_state: Tuple[int, int], before_state: Tuple[int, int] = (0, 0),
+                 n: int = 8, ) -> None:
     """
     Writes PWL to sources file
     :param before_state:
@@ -25,10 +21,11 @@ def write_source(
     :param saving_file:
         A string with the name of the file to which the user wants to write.
     """
-    format_binary = lambda x: format(x, "#0" + str(n + 2) + "b")[:1:-1]
-    a0, a1, b0, b1 = tuple(
-        format_binary(i) for _input in zip(before_state, after_state) for i in _input
-    )
+
+    def format_binary(x):
+        return format(x, "#0" + str(n + 2) + "b")[:1:-1]
+
+    a0, a1, b0, b1 = tuple(format_binary(i) for _input in zip(before_state, after_state) for i in _input)
     with saving_file.open(mode="w+") as file:
         file.write("* sources \n\n")
         # writes all input sources for A
@@ -59,13 +56,12 @@ def write_source(
                     file.write("Vb%d b%d_in gnd PWL(0n vdd)\n" % (i, i))
 
 
-def count_repeated(input_file: Path) -> Tuple[List[int], List[int]]:
+def count_repeated(input_file: Path) -> List[Tuple[int, Tuple[int, int]]]:
     import subprocess
 
     sort = subprocess.Popen(["sort", str(input_file)], stdout=subprocess.PIPE)
     count = subprocess.check_output(["uniq", "-c"], stdin=sort.stdout)
-    unique = count.decode("utf-8")
-    unique = unique.split("\n")
+    unique = count.decode("utf-8").split("\n")
     pairs = []
     for line in unique[:-1]:
         num, values = line.split(" ")[-2:]
@@ -76,9 +72,7 @@ def count_repeated(input_file: Path) -> Tuple[List[int], List[int]]:
     return pairs
 
 
-def create_input_sources(
-    inputs_file: Path, saving_dir: Path, n: int, dataset: str
-) -> List[Tuple[int, Tuple[int, int]]]:
+def create_input_sources(inputs_file: Path, saving_dir: Path, n: int, ) -> List[Tuple[int, Tuple[int, int]]]:
     """
     Creates sources for all inputs while simulating the energy consumption
     of an application.
@@ -95,11 +89,7 @@ def create_input_sources(
     if not saving_dir.exists():
         saving_dir.mkdir()
     repeated = count_repeated(input_file=inputs_file)
-    for id, pair in enumerate(repeated):
+    for i, pair in enumerate(repeated):
         _, operation = pair
-        write_source(
-            after_state=operation,
-            n=n,
-            saving_file=saving_dir / ("source_operation_%d.txt" % id),
-        )
+        write_source(after_state=operation, n=n, saving_file=saving_dir / ("source_operation_%d.txt" % i), )
     return repeated

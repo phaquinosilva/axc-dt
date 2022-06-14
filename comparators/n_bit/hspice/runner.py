@@ -13,7 +13,7 @@ MIXED = ["adult", "heart-disease", "arrhythmia"]
 DATASETS = NUMERICAL + MIXED
 
 
-def simulate_operations(name: str, n_bits: int) -> None:
+def simulate_operations(name: str, n_bits: int) -> int:
     """
     Simulates the comparisons made in a DT application
     with n-bit comparators
@@ -30,8 +30,8 @@ def simulate_operations(name: str, n_bits: int) -> None:
         )
         num_samples = len(op_list)
         total_simulations += num_samples
-        # for i in range(num_samples):
-        # run_simulation(comparator=circuit, op_index=i, n_bits=n_bits, dataset=name)
+        for i in range(num_samples):
+            run_simulation(comparator=circuit, op_index=i, n_bits=n_bits, dataset=name)
     return total_simulations
 
 
@@ -51,6 +51,7 @@ def create_rca_include(fa: str, n: int) -> None:
 
 def run_simulation(comparator: str, op_index: int, n_bits: int, dataset: str) -> None:
     """Runs simulation for a single operation"""
+    (Path(__file__).parent / f"outputs/{dataset}").mkdir(parents=True, exist_ok=True)
     with open("simulation_info.txt", "w") as f:
         f.seek(0)
         if comparator in ADDERS:
@@ -78,8 +79,6 @@ def run_simulation(comparator: str, op_index: int, n_bits: int, dataset: str) ->
     with open("circuit.cir", "w") as f:
         f.seek(0)
         f.write(contents)
-    if not (Path(__file__).parent / f"outputs/{dataset}").exists():
-        (Path(__file__).parent / f"outputs/{dataset}").mkdir()
     os.rename(
         "./circuit.mt0.csv",
         f"outputs/{dataset}/result_{comparator}_{op_index}.csv",
@@ -87,7 +86,7 @@ def run_simulation(comparator: str, op_index: int, n_bits: int, dataset: str) ->
 
 
 if __name__ == "__main__":
-    total_simulations = 0
+    n_simulations = 0
     for dataset in DATASETS:
-        total_simulations += simulate_operations(dataset, 8)
-    print(total_simulations * 0.9 // 3600)
+        n_simulations += simulate_operations(dataset, 8)
+    print(n_simulations * 0.9 // 3600)

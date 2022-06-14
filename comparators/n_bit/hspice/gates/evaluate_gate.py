@@ -3,7 +3,7 @@
 import os
 from pathlib import Path
 
-import pandas as pd
+import pandas as pd  # type: ignore
 
 SIM_TIME = 3e-9
 VOLTAGE = 0.7

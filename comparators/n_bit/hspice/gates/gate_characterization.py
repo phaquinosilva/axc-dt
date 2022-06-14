@@ -59,7 +59,7 @@ def inputs_of_interest(
 ) -> List[Tuple[int, int]]:
     # f: function to be evaluated
     # n: number of input bits
-    all_inputs = [(i, j) for i in range(2 ** n) for j in range(2 ** n) if i != j]
+    all_inputs = [(i, j) for i in range(2**n) for j in range(2**n) if i != j]
     filtered_inputs = filter(lambda tup: differ_test(tup[0], tup[1], f, n), all_inputs)
     return list(filtered_inputs)
 

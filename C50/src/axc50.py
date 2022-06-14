@@ -23,10 +23,11 @@ CONTINUOUS_TESTS = [
 C50_DIR = Path(__file__).parents[1]
 TOP_DIR = Path(__file__).parents[2]
 
+
 def _build_fa_based(n_bits: int) -> None:
     """Build FA-based comparators C5.0 instances"""
     os.system(f"make -C {str(C50_DIR)}/src/")
-    (C50_DIR / 'src/c5.0').rename(C50_DIR / "builds/c5.0_default")
+    (C50_DIR / "src/c5.0").rename(C50_DIR / "builds/c5.0_default")
     for adder in FA_BASED:
         ## make approximate versions
         with (C50_DIR / "src/classify.c").open("r") as f:
@@ -47,7 +48,7 @@ def _build_fa_based(n_bits: int) -> None:
             f.write(classify)
 
         os.system(f"make -C {str(C50_DIR)}/src/")
-        (C50_DIR / 'src/c5.0').rename(C50_DIR / f"builds/c5.0_{adder}_{n_bits}b") 
+        (C50_DIR / "src/c5.0").rename(C50_DIR / f"builds/c5.0_{adder}_{n_bits}b")
 
         with (C50_DIR / "src/classify.c").open("r") as f:
             classify = f.read()
@@ -79,7 +80,7 @@ def _build_dedicated(n_bits: int) -> None:
                 f.write(classify)
 
         os.system(f"make -C {str(C50_DIR)}/src/")
-        (C50_DIR / 'src/c5.0').rename(C50_DIR / f"builds/c5.0_{comp}_{n_bits}b")
+        (C50_DIR / "src/c5.0").rename(C50_DIR / f"builds/c5.0_{comp}_{n_bits}b")
 
         with (C50_DIR / "src/classify.c").open("r") as f:
             classify = f.read()
@@ -98,7 +99,7 @@ def _train_datasets(datasets: List[str] = DATASETS, n_bits: int = 8) -> None:
     for dataset in datasets:
         if not (C50_DIR / f"datasets/quantized/{dataset}/output").exists():
             (C50_DIR / f"datasets/quantized/{dataset}/output").mkdir()
-        
+
         # Run default on raw data
         os.system(
             f"{C50_DIR.absolute()}/builds/c5.0_default -f {C50_DIR.absolute()}/datasets/raw/{dataset}/{dataset}"
@@ -114,7 +115,7 @@ def _train_datasets(datasets: List[str] = DATASETS, n_bits: int = 8) -> None:
             f"{C50_DIR.absolute()}/builds/c5.0_default -f {C50_DIR.absolute()}/datasets/quantized/{dataset}/{dataset}"
             + f" > {C50_DIR.absolute()}/datasets/quantized/{dataset}/output/{dataset}_default_quantized.output"
         )
-        
+
         # Run approximate versions on scaled and quantized data
         for comp in FA_BASED + DEDICATED:
             os.system(
@@ -126,15 +127,16 @@ def _train_datasets(datasets: List[str] = DATASETS, n_bits: int = 8) -> None:
                 f"{TOP_DIR.absolute()}/comparators/n_bit/hspice/logs/{dataset}_{comp}.testlog",
             )
 
+
 def build(
     *,
     n_bits: int = 8,
 ) -> None:
-    if not (C50_DIR / 'builds').exists():
-        (C50_DIR / 'builds').mkdir()
+    if not (C50_DIR / "builds").exists():
+        (C50_DIR / "builds").mkdir()
     _build_fa_based(n_bits=n_bits)
     _build_dedicated(n_bits=n_bits)
 
-def train(*, n_bits: int = 8, datasets: List[str] = DATASETS) -> None:
-    _train_datasets(datasets=datasets,n_bits=n_bits)
 
+def train(*, n_bits: int = 8, datasets: List[str] = DATASETS) -> None:
+    _train_datasets(datasets=datasets, n_bits=n_bits)

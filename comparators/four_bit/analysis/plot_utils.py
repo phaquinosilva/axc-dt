@@ -60,7 +60,7 @@ def plot_error_heatmap(
     df = pd.read_csv(infile_path, sep=",")
     df.rename(columns={"Unnamed: 0": "A_B"}, inplace=True)
     df["A"] = df["A_B"].apply(lambda x: x >> 4)
-    df["B"] = df["A_B"].apply(lambda x: x % (2 ** 4))
+    df["B"] = df["A_B"].apply(lambda x: x % (2**4))
 
     df["A+B"] = df["A"] + df["B"]
     df = df.sort_values(["A+B", "A", "B"])

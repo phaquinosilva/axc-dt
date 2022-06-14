@@ -7,7 +7,7 @@ debug/
 sources/
 *logs/
 quantized/
-*results/
+# *results/
 
 # C5.0 outputs and mods
 *.info
@@ -20,7 +20,7 @@ quantized/
 
 
 # Python outputs
-*.csv
+# *.csv
 
 # Generated temporary or simulation-specific HSPICE files
 # TODO: Find a better suited file extension
@@ -33,6 +33,7 @@ __pycache__/
 .mypy_cache/
 .dmypy.json
 .pytest_cache/
+.idea/
 
 # Other
 *teste*

@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Dict, List
 
 import pandas as pd
+
 from C50.datasets.quantizer import DATASETS
 
 # Comparators
@@ -14,6 +15,7 @@ COMPARATORS = DEFAULT + DEDICATED + ADDERS
 FILE_DIR = Path(__file__).parent
 C50_DIR = Path(__file__).parents[1]
 TOP_DIR = Path(__file__).parents[2]
+
 
 def extract_accuracy(lines: str) -> Dict[str, float]:
     """Finds error rates in file"""
@@ -31,7 +33,9 @@ def extract_accuracy(lines: str) -> Dict[str, float]:
 
 
 # TODO: #2 Improve readability/maintainability of this function
-def process_results(*, datasets:List[str] = DATASETS, save_files: bool = False) -> None:
+def process_results(
+    *, datasets: List[str] = DATASETS, save_files: bool = False
+) -> None:
     testsets = []
     trainsets = []
 
@@ -40,7 +44,9 @@ def process_results(*, datasets:List[str] = DATASETS, save_files: bool = False) 
         test = {}
         train = {}
         for comparator in COMPARATORS:
-            with open(FILE_DIR / f"quantized/{set}/output/{set}_{comparator}.output", 'r') as f:
+            with open(
+                FILE_DIR / f"quantized/{set}/output/{set}_{comparator}.output", "r"
+            ) as f:
                 lines = list(f)
             train[comparator], test[comparator] = extract_accuracy(lines)
         train = pd.Series(train)
@@ -51,13 +57,13 @@ def process_results(*, datasets:List[str] = DATASETS, save_files: bool = False) 
     test_rates = pd.concat(testsets, axis=1, keys=datasets)
     train_rates = pd.concat(trainsets, axis=1, keys=datasets)
     if save_files:
-        (TOP_DIR / 'results').mkdir(parents=True, exist_ok=True)
+        (TOP_DIR / "results").mkdir(parents=True, exist_ok=True)
         test_rates.to_csv(TOP_DIR / "results/test_accuracy.csv")
         train_rates.to_csv(TOP_DIR / "results/train_accuracy.csv")
-    
+
     print(f"Train accuracy:\n{train_rates}")
     print(f"Test accuracy:\n{test_rates}")
-    
+
     return test_rates, train_rates
 
 
