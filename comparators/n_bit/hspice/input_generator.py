@@ -8,8 +8,12 @@ from pathlib import Path
 from typing import List, Tuple
 
 
-def write_source(saving_file: Path, after_state: Tuple[int, int], before_state: Tuple[int, int] = (0, 0),
-                 n: int = 8, ) -> None:
+def write_source(
+    saving_file: Path,
+    after_state: Tuple[int, int],
+    before_state: Tuple[int, int] = (0, 0),
+    n: int = 8,
+) -> None:
     """
     Writes PWL to sources file
     :param before_state:
@@ -25,7 +29,9 @@ def write_source(saving_file: Path, after_state: Tuple[int, int], before_state: 
     def format_binary(x):
         return format(x, "#0" + str(n + 2) + "b")[:1:-1]
 
-    a0, a1, b0, b1 = tuple(format_binary(i) for _input in zip(before_state, after_state) for i in _input)
+    a0, a1, b0, b1 = tuple(
+        format_binary(i) for _input in zip(before_state, after_state) for i in _input
+    )
     with saving_file.open(mode="w+") as file:
         file.write("* sources \n\n")
         # writes all input sources for A
@@ -72,7 +78,11 @@ def count_repeated(input_file: Path) -> List[Tuple[int, Tuple[int, int]]]:
     return pairs
 
 
-def create_input_sources(inputs_file: Path, saving_dir: Path, n: int, ) -> List[Tuple[int, Tuple[int, int]]]:
+def create_input_sources(
+    inputs_file: Path,
+    saving_dir: Path,
+    n: int,
+) -> List[Tuple[int, Tuple[int, int]]]:
     """
     Creates sources for all inputs while simulating the energy consumption
     of an application.
@@ -91,5 +101,9 @@ def create_input_sources(inputs_file: Path, saving_dir: Path, n: int, ) -> List[
     repeated = count_repeated(input_file=inputs_file)
     for i, pair in enumerate(repeated):
         _, operation = pair
-        write_source(after_state=operation, n=n, saving_file=saving_dir / ("source_operation_%d.txt" % i), )
+        write_source(
+            after_state=operation,
+            n=n,
+            saving_file=saving_dir / ("source_operation_%d.txt" % i),
+        )
     return repeated

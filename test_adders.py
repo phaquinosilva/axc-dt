@@ -2,9 +2,14 @@ import pytest
 
 from comparators.four_bit.analysis.axdc import axdc2, axdc6, edc
 from comparators.n_bit.analysis.axc_full_adders import add, exact
-from comparators.n_bit.analysis.nbit_comparators import (bin_to_dec, exact_leq,
-                                                         leq, n_axdc1, n_axdc2,
-                                                         n_edc)
+from comparators.n_bit.analysis.nbit_comparators import (
+    bin_to_dec,
+    exact_leq,
+    leq,
+    n_axdc1,
+    n_axdc2,
+    n_edc,
+)
 
 
 @pytest.mark.parametrize(
@@ -59,28 +64,22 @@ def test_8bit_edc():
 
 def test_8bit_axdc1():
     def axdc1_8b(a, b):
-        ## aprrox 1: tirar a lógica do bit 0
         a = format(a, "#0%db" % 10)[:1:-1]
         b = format(b, "#0%db" % 10)[:1:-1]
         a = [int(i) for i in a]
         b = [int(i) for i in b]
 
-        # eq1 = ~(a[1] ^ b[1])
-        # eq2 = ~(a[2] ^ b[2])
         eq3 = ~(a[3] ^ b[3])
         eq4 = ~(a[4] ^ b[4])
         eq5 = ~(a[5] ^ b[5])
         eq6 = ~(a[6] ^ b[6])
         eq7 = ~(a[7] ^ b[7])
-
         n7 = ~(a[7] & ~b[7])
         n6 = ~(a[6] & ~b[6] & eq7)
         n5 = ~(a[5] & ~b[5] & eq7 & eq6)
         n4 = ~(a[4] & ~b[4] & eq7 & eq6 & eq5)
         n3 = ~(a[3] & ~b[3] & eq7 & eq6 & eq5 & eq4)
         n2 = ~(a[2] & ~b[2] & eq7 & eq6 & eq5 & eq4 & eq3)
-        # n1 = ~(a[1] & ~b[1] & eq7 & eq6 & eq5 & eq4 & eq3 & eq2)
-        # n0 = ~(a[0] & ~b[0] & eq7 & eq6 & eq5 & eq4 & eq3 & eq2 & eq1)
         return (n7 & n6 & n5 & n4 & n3 & n2) & 1
 
     for i in range(2**8):

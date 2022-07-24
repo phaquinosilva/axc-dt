@@ -3,9 +3,15 @@ from typing import Callable
 
 import pandas as pd
 
-from comparators.n_bit.analysis.nbit_comparators import (ama1, ama2, exact_leq,
-                                                         leq, n_axdc1, n_axdc2,
-                                                         sma)
+from comparators.n_bit.analysis.nbit_comparators import (
+    ama1,
+    ama2,
+    exact_leq,
+    leq,
+    n_axdc1,
+    n_axdc2,
+    sma,
+)
 
 
 def _compute_metrics(n_bits: int, comparator: Callable) -> "pd.Series":

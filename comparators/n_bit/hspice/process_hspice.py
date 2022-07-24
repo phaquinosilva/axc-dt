@@ -25,7 +25,7 @@ def process_comparators(name: str, *, enable_cleanup: bool = False) -> None:
 
 
 def process_results(
-        comparator: str, dataset: str, *, enable_cleanup: bool = False
+    comparator: str, dataset: str, *, enable_cleanup: bool = False
 ) -> Dict[str, Union[float, int]]:
     """Process results obtained from HSPICE"""
     energy_list = []
@@ -44,7 +44,7 @@ def process_results(
         n_ops += num
 
         filename = (
-                Path(__file__).parent / f"outputs/{dataset}/result_{comparator}_{i}.csv"
+            Path(__file__).parent / f"outputs/{dataset}/result_{comparator}_{i}.csv"
         )
 
         res_df = pd.read_csv(filename, skiprows=3, na_values="failed")

@@ -47,7 +47,7 @@ def exact_leq(a, b):
 def n_edc(a: int, b: int, n: int) -> int:
     """Exact Dedicated Comparator (EDC)"""
     # formatting stuff
-    a, b, eq = _int_to_bin(a, b, n)
+    a, b, eq = _dec_to_bin(a, b, n)
     for i in range(1, n):
         eq[i] = ~(a[i] ^ b[i])
     # compute greater for each bit
@@ -66,7 +66,7 @@ def n_edc(a: int, b: int, n: int) -> int:
 
 def n_axdc1(a: int, b: int, n: int) -> int:
     """Approximate Dedicated Comparator 1 (AxDC1)"""
-    a, b, eq = _int_to_bin(a, b, n)
+    a, b, eq = _dec_to_bin(a, b, n)
     for i in range(n // 4 + 1, n):
         eq[i] = ~(a[i] ^ b[i])
     # compute greater for each bit
@@ -86,7 +86,7 @@ def n_axdc1(a: int, b: int, n: int) -> int:
 def n_axdc2(a: int, b: int, n: int) -> int:
     """Approximate Dedicated Comparator 2 (AxDC2)"""
     # formatting stuff
-    a, b, eq = _int_to_bin(a, b, n)
+    a, b, eq = _dec_to_bin(a, b, n)
     # compute xnors
     n_2 = n // 2
     n_4 = n // 4
