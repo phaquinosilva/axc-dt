@@ -105,7 +105,7 @@ int to_int(int *bin, int n)
 int leq(int a, int b, void (*f)(int, int, int, int *), int n)
 {
     // a, b: operandos (a <= b)
-    // (*f): nome do FA a ser simulado
+    // f: nome do FA a ser simulado
     // n: numero de bits
 
     // conversao inteiro binario

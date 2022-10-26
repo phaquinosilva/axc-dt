@@ -344,12 +344,12 @@ void FormTree(CaseNo Fp, CaseNo Lp, int Level, Tree *Result)
     Tree	Node;
     DiscrValue	v;
 
-
-    assert(Fp >= 0 && Lp >= Fp && Lp <= MaxCase);
+	// Test if last case is done
+    assert(Fp >= 0 && Lp >= Fp && Lp <= MaxCase); 
 
     /*  Make a single pass through the cases to determine class frequencies
-	and value/class frequencies for all discrete attributes  */
-
+	and value/class frequencies for all discrete attributes  */  // DISCRETE
+	
     FindAllFreq(Fp, Lp);
 
     /*  Choose the best leaf and the least prevalent class  */
@@ -685,7 +685,7 @@ void ProcessQueue(CaseNo WFp, CaseNo WLp, CaseCount WCases)
 		}
 	    }
 	}
-	else
+	else  // @crismeinhardt, @grellert, @phaquinosilva : CASO CONTINUO
 	{
 	    EvalContinuousAtt(Att, WFp, WLp);
 	}

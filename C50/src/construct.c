@@ -109,7 +109,7 @@ void ConstructClassifiers()
     }
 
     LEAFRATIO = Bp = 0;
-    SetMinGainThresh();
+    SetMinGainThresh();  // sets threshold here based on MaxCase and MaxClass
 
     /*  Main loop for growing the sequence of boosted classifiers  */
 

@@ -22,8 +22,6 @@
 /*									 */
 /*************************************************************************/
 
-
-
 /*************************************************************************/
 /*									 */
 /*	Sorting utilities						 */
@@ -31,12 +29,15 @@
 /*									 */
 /*************************************************************************/
 
-
 #include "defns.i"
 #include "extern.i"
 
-#define SwapSRec(a,b)	{Xab=SRec[a]; SRec[a]=SRec[b]; SRec[b]=Xab;}
-
+#define SwapSRec(a, b)     \
+	{                      \
+		Xab = SRec[a];     \
+		SRec[a] = SRec[b]; \
+		SRec[b] = Xab;     \
+	}
 
 /*************************************************************************/
 /*									 */
@@ -44,61 +45,114 @@
 /*									 */
 /*************************************************************************/
 
-
 void Cachesort(CaseNo Fp, CaseNo Lp, SortRec *SRec)
 /*   ---------  */
 {
-    CaseNo	i, Middle, High;
-    ContValue	Thresh, Val;
-    SortRec	Xab;
+	CaseNo i, Middle, High;
+	ContValue Thresh, Val;
+	SortRec Xab;
 
-
-    while ( Fp < Lp )
-    {
-	Thresh = SRec[(Fp+Lp) / 2].V;
-
-	/*  Divide elements into three groups:
-		Fp .. Middle-1: values < Thresh
-		Middle .. High: values = Thresh
-		High+1 .. Lp:   values > Thresh  */
-
-	for ( Middle = Fp ; SRec[Middle].V < Thresh ; Middle++ )
-	    ;
-
-	for ( High = Lp ; SRec[High].V > Thresh ; High-- )
-	    ;
-
-	for ( i = Middle ; i <= High ; )
+	while (Fp < Lp)
 	{
-	    if ( (Val = SRec[i].V) < Thresh )
-	    {
-		SwapSRec(Middle, i);
-		Middle++;
-		i++;
-	    }
-	    else
-	    if ( Val > Thresh )
-	    {
-		SwapSRec(High, i);
-		High--;
-	    }
-	    else
-	    {
-		i++;
-	    }
+		Thresh = SRec[(Fp + Lp) / 2].V;
+
+		/*  Divide elements into three groups:
+			Fp .. Middle-1: values < Thresh
+			Middle .. High: values = Thresh
+			High+1 .. Lp:   values > Thresh  */
+
+		for (Middle = Fp; SRec[Middle].V < Thresh; Middle++)
+			;
+
+		for (High = Lp; SRec[High].V > Thresh; High--)
+			;
+
+		for (i = Middle; i <= High;)
+		{
+			if ((Val = SRec[i].V) < Thresh)
+			{
+				SwapSRec(Middle, i);
+				Middle++;
+				i++;
+			}
+			else if (Val > Thresh)
+			{
+				SwapSRec(High, i);
+				High--;
+			}
+			else
+			{
+				i++;
+			}
+		}
+
+		/*  Sort the first group  */
+
+		Cachesort(Fp, Middle - 1, SRec);
+
+		/*  Continue with the last group  */
+
+		Fp = High + 1;
 	}
-
-	/*  Sort the first group  */
-
-	Cachesort(Fp, Middle-1, SRec);
-
-	/*  Continue with the last group  */
-
-	Fp = High+1;
-    }
 }
 
+/*************************************************************************/
+/*									 									 */
+/*	Sort elements Fp to Lp of SRec according to a						 */
+/*	given preorder function.											 */
+/*									 									 */
+/*************************************************************************/
 
+void generic_order_cachesort(CaseNo Fp, CaseNo Lp, SortRec *SRec, int (*_leq)(float, float, int), int n)
+/*   ---------  */
+{
+	CaseNo i, Middle, High;
+	ContValue Thresh, Val;
+	SortRec Xab;
+
+	while (Fp < Lp)
+	{
+		Thresh = SRec[(Fp + Lp) / 2].V;
+
+		/*  Divide elements into three groups:
+			Fp .. Middle-1: values < Thresh
+			Middle .. High: values = Thresh
+			High+1 .. Lp:   values > Thresh  */
+
+		for (Middle = Fp; !_leq(Thresh, SRec[Middle].V, n); Middle++)
+			;
+
+		for (High = Lp; !_leq(SRec[High].V, Thresh, n); High--)
+			;
+
+		for (i = Middle; i <= High;)
+		{
+			if (!_leq(Thresh, (Val = SRec[i].V), n))
+			{
+				SwapSRec(Middle, i);
+				Middle++;
+				i++;
+			}
+			else if (!_leq(Val, Thresh, n))
+			{
+				SwapSRec(High, i);
+				High--;
+			}
+			else
+			{
+				i++;
+			}
+		}
+
+		/*  Sort the first group  */
+
+		Cachesort(Fp, Middle - 1, SRec);
+
+		/*  Continue with the last group  */
+
+		Fp = High + 1;
+	}
+}
 
 /*************************************************************************/
 /*									 */
@@ -106,51 +160,49 @@ void Cachesort(CaseNo Fp, CaseNo Lp, SortRec *SRec)
 /*									 */
 /*************************************************************************/
 
-
 void Quicksort(CaseNo Fp, CaseNo Lp, Attribute Att)
 /*   ---------  */
 {
-    CaseNo	i, Middle, High;
-    ContValue	Thresh, Val;
+	CaseNo i, Middle, High;
+	ContValue Thresh, Val;
 
-    if ( Fp < Lp )
-    {
-	Thresh = CVal(Case[(Fp+Lp) / 2], Att);
-
-	/*  Divide cases into three groups:
-		Fp .. Middle-1: values < Thresh
-		Middle .. High: values = Thresh
-		High+1 .. Lp:   values > Thresh  */
-
-	for ( Middle = Fp ; CVal(Case[Middle], Att) < Thresh ; Middle++ )
-	    ;
-
-	for ( High = Lp ; CVal(Case[High], Att) > Thresh ; High-- )
-	    ;
-
-	for ( i = Middle ; i <= High ; )
+	if (Fp < Lp)
 	{
-	    if ( (Val = CVal(Case[i], Att)) < Thresh )
-	    {
-		Swap(Middle, i);
-		Middle++;
-		i++;
-	    }
-	    else
-	    if ( Val > Thresh )
-	    {
-		Swap(High, i);
-		High--;
-	    }
-	    else
-	    {
-		i++;
-	    }
+		Thresh = CVal(Case[(Fp + Lp) / 2], Att);
+
+		/*  Divide cases into three groups:
+			Fp .. Middle-1: values < Thresh
+			Middle .. High: values = Thresh
+			High+1 .. Lp:   values > Thresh  */
+
+		for (Middle = Fp; CVal(Case[Middle], Att) < Thresh; Middle++)
+			;
+
+		for (High = Lp; CVal(Case[High], Att) > Thresh; High--)
+			;
+
+		for (i = Middle; i <= High;)
+		{
+			if ((Val = CVal(Case[i], Att)) < Thresh)
+			{
+				Swap(Middle, i);
+				Middle++;
+				i++;
+			}
+			else if (Val > Thresh)
+			{
+				Swap(High, i);
+				High--;
+			}
+			else
+			{
+				i++;
+			}
+		}
+
+		/*  Sort the first and third groups  */
+
+		Quicksort(Fp, Middle - 1, Att);
+		Quicksort(High + 1, Lp, Att);
 	}
-
-	/*  Sort the first and third groups  */
-
-	Quicksort(Fp, Middle-1, Att);
-	Quicksort(High+1, Lp, Att);
-    }
 }

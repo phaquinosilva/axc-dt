@@ -165,10 +165,7 @@ void FindLeaf(DataRec Case, Tree T, Tree PT, float Fraction)
 
 		ForEach(v, 2, 3)
 		{
-			/* @pedro: aqui é onde aproximar poderia ter impacto nos continuos na predição */
-			/* talvez printar num arquivo os valores de Fraction, e BrWt */ 
-			// aqui ele testa o peso do ramo (<= OU >) multiplicado por Fraction -- o que é Fraction?
-		    // Fraction é de fato a fração do atributo que está sendo testada, 
+		    // Fraction é a frequência do atributo que está sendo testada,
 			// então o teste do valor continuo em si é aproximado nas probabilidades do Interpolate
 			if ( (NewFrac = Fraction * BrWt[v]) >= 0.01 )
 		    {
