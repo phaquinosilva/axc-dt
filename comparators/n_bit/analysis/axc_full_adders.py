@@ -56,7 +56,7 @@ def add(adder, in_a, in_b, n_bits):
     final = []
     cin = 0
     for i in range(n_bits - 1, -1, -1):
-        fa = adder(int(a[i]) & 1, int(b[i]) & 1, cin)
+        fa = adder(a[i] & 1, b[i] & 1, cin)
         final.append(fa[0])
         cin = fa[1]
     final = final[::-1]
@@ -72,8 +72,8 @@ def sub(adder: Callable, in_a: int, in_b: int, n_bits: int) -> Tuple[List[int], 
     final = []
     cin = 0
     for i in range(n_bits - 1, -1, -1):
-        fa = adder(a[i] & 1, ~b[i] & 1, cin)
-        final.append(str(fa[0]))
-        cin = fa[1]
+        s, cout = adder(a[i] & 1, ~b[i] & 1, cin)
+        final.append(s)
+        cin = cout
     final = final[::-1]
     return final, cin

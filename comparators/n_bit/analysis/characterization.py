@@ -3,14 +3,12 @@ from typing import Callable
 
 import pandas as pd
 
-from comparators.n_bit.analysis.nbit_comparators import (
-    ama1,
-    ama2,
+from axc_full_adders import ama1, ama2, sma
+from nbit_comparators import (
     exact_leq,
     leq,
     n_axdc1,
     n_axdc2,
-    sma,
 )
 
 
@@ -50,7 +48,7 @@ def _compute_metrics(n_bits: int, comparator: Callable) -> "pd.Series":
 def calculate_error_metrics(n_bits):
     ADDERS = [sma, ama1, ama2]
     DEDICATED = [n_axdc1, n_axdc2]
-    COMPARATORS = DEDICATED  # + ADDERS
+    COMPARATORS = DEDICATED + ADDERS
     COMPARATOR_NAMES = [comparator.__name__ for comparator in COMPARATORS]
     rates = []
 
@@ -60,3 +58,6 @@ def calculate_error_metrics(n_bits):
             comparator = functools.partial(leq, adder=comparator)
         rates.append(_compute_metrics(n_bits, comparator))
     return pd.concat(rates, axis=0, keys=COMPARATOR_NAMES)
+
+if __name__=="__main__":
+    print(calculate_error_metrics(8))

@@ -79,7 +79,7 @@ def write_sources(prev, later, output, n, file_name, infos):
     states = []
     states.append((list_bin(prev, n), list_bin(later, n)))
     # write input sources in a file
-    with open("sources/source_" + file_name + ".txt", "w+") as file:
+    with open("./sources/source_" + file_name + ".txt", "w+") as file:
         file.write("** sources and measures for comparator type: " + file_name + "\n\n")
         for before, after in states:
             # writes all input sources for A

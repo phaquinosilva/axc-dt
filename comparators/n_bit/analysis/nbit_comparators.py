@@ -10,7 +10,7 @@ of AxC n-bit comparators. The comparators supported are:
 
 from typing import Callable, List
 
-from comparators.n_bit.analysis.axc_full_adders import sub
+from axc_full_adders import exact, sub
 
 
 def bin_to_dec(a: List[int]) -> int:
@@ -28,23 +28,25 @@ def _dec_to_bin(a, b, n):
 
 
 # a >= b
-def geq(adder, in_a, in_b, n_bits):
+def geq(adder, in_a, in_b, n_bits=8):
     # A >= B : A - B >= 0
     _, cout = sub(adder, in_a, in_b, n_bits)
     return cout & 0
 
 
 # a <= b
-def leq(a: int, b: int, n: int, adder: Callable) -> int:
-    _, cout = sub(adder, a, b, n)
-    return cout == 0
+def leq(a: int, b: int, n: int = 8, adder: Callable = exact) -> int:
+    s, cout = sub(adder, a, b, n)
+    d = (s[-1]) & 1
+    c = (~s[-1]) & 1
+    return (~cout) & 1
 
 
 def exact_leq(a, b):
     return 1 if a <= b else 0
 
 
-def n_edc(a: int, b: int, n: int) -> int:
+def n_edc(a: int, b: int, n: int = 8) -> int:
     """Exact Dedicated Comparator (EDC)"""
     # formatting stuff
     a, b, eq = _dec_to_bin(a, b, n)
@@ -64,7 +66,7 @@ def n_edc(a: int, b: int, n: int) -> int:
     return ~greater & 1
 
 
-def n_axdc1(a: int, b: int, n: int) -> int:
+def n_axdc1(a: int, b: int, n: int = 8) -> int:
     """Approximate Dedicated Comparator 1 (AxDC1)"""
     a, b, eq = _dec_to_bin(a, b, n)
     for i in range(n // 4 + 1, n):
@@ -83,7 +85,7 @@ def n_axdc1(a: int, b: int, n: int) -> int:
     return ~greater & 1
 
 
-def n_axdc2(a: int, b: int, n: int) -> int:
+def n_axdc2(a: int, b: int, n: int = 8) -> int:
     """Approximate Dedicated Comparator 2 (AxDC2)"""
     # formatting stuff
     a, b, eq = _dec_to_bin(a, b, n)
