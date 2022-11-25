@@ -99,6 +99,7 @@ void EvalContinuousAtt(Attribute Att, CaseNo Fp, CaseNo Lp)
 		GEnv.Freq[3][c] -= w;
 
 		GEnv.HighVal = GEnv.SRec[i + 1].V;
+		// talvez aqui tenhamos que garantir que essa comparação seja aproimada tambem
 		if (GEnv.HighVal > GEnv.LowVal)
 		{
 			Tries++;
