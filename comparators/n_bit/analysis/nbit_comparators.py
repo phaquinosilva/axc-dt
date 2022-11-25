@@ -31,15 +31,23 @@ def _dec_to_bin(a, b, n):
 def geq(adder, in_a, in_b, n_bits=8):
     # A >= B : A - B >= 0
     _, cout = sub(adder, in_a, in_b, n_bits)
-    return cout & 0
+    return cout & 1
 
 
 # a <= b
 def leq(a: int, b: int, n: int = 8, adder: Callable = exact) -> int:
-    s, cout = sub(adder, a, b, n)
-    d = (s[-1]) & 1
-    c = (~s[-1]) & 1
-    return (~cout) & 1
+    a = format(a, f"#0{n + 2}b")[2:]
+    b = format(b, f"#0{n + 2}b")[2:]
+    a = list(map(int, a))
+    b = list(map(int, b))
+    final = []
+    cin = 1
+    for i in range(n - 1, -1, -1):
+        s, cout = adder(b[i] & 1, ~a[i] & 1, cin)
+        final.append(s)
+        cin = cout
+    final = final[::-1]
+    return cin & 1
 
 
 def exact_leq(a, b):
