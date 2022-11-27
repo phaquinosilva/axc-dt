@@ -59,5 +59,6 @@ def calculate_error_metrics(n_bits):
         rates.append(_compute_metrics(n_bits, comparator))
     return pd.concat(rates, axis=0, keys=COMPARATOR_NAMES)
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     print(calculate_error_metrics(8))
