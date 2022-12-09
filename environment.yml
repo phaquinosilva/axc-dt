@@ -12,3 +12,4 @@ dependencies:
   - mypy=0.950
   - scikit-image
   - matplotlib
+  - seaborn

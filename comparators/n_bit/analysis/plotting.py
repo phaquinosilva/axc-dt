@@ -13,10 +13,12 @@ from pathlib import Path
 
 parent = Path(__file__).parent
 
+# NOTE: These configurations work for a functioning LaTeX installation.
+# If you don't have LaTeX installed and configure for matplotlib fonts rendering, 
+# you can comment out the following lines.
 size=10
 params = {
         'text.usetex': True,
-        'font.family': "serif",
         'font.size': size,
         'legend.fontsize': size,
         'axes.labelsize': size,
@@ -33,7 +35,8 @@ plt.rcParams.update(params)
 px = 1/plt.rcParams['figure.dpi']  # pixel in inches
 
 def set_size(width=483, fraction=1, subplots=(1, 1)):
-    """Set figure dimensions to avoid scaling in LaTeX.
+    """
+    Set figure dimensions to avoid scaling in LaTeX.
 
     Parameters
     ----------
@@ -128,8 +131,8 @@ def plot_heatmap(
 
 
 def create_hmplots():
-    n = 8
-    n_group = 32
+    n = 4
+    n_group = 2
     percent = False
 
     ama1_nb = partial(leq, n=n, adder=ama1)
