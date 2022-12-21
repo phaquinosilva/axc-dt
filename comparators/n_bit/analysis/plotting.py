@@ -99,7 +99,6 @@ def plot_heatmap(
     comparator: Callable,
     group: int = 2,
     save_name: Optional[str] = None,
-    percentage: bool = False,
 ) -> None:
     """
     Plot a heatmap of the error rates of a comparator.
@@ -192,7 +191,51 @@ def plot_error_rates():
         parent / "figures/error_rates_axdc1.pdf", format="pdf", bbox_inches="tight"
     )
 
+def plot_heatmap_slice(
+    n_bits: int = 8,
+    comparator: Callable = n_axdc1,
+    group: int = 2,
+    save_name: Optional[str] = None,
+) -> None:
+    """
+    Plot a heatmap of the error rates of a comparator.
+    """
+    # TODO: Add support for parallel execution with joblib. 
+    # This is important for n > 8 because the runtimes increase exponentially.
+    size = 32
+    errors = np.zeros((size // group, size // group))
+    count = 0
+    for i in range(size):
+        for j in range(size):
+            if exact_leq(i, j) != comparator(a=i, b=j, n=n_bits):
+                errors[i // group, j // group] += 1
+                count += 1
+    labels = [f"[{i*group} - {(i+1)*group-1}]" for i in range(size // group)]
+    df = pd.DataFrame(errors, index=labels, columns=labels)
+
+    # perc = df.copy()
+    # perc = perc.div(count).multiply(100)
+    annot = df.astype(int).astype(str)
+    annot = map(
+        lambda x: x if x != "0" else "",
+        annot,
+        )
+    # Find the slice of the heatmap in the range [0, 31]
+    # df = df.iloc[0:32, 0:32]
+    # annot = annot.iloc[0:32, 0:32]
+
+    ax = sns.heatmap(df+10, cmap=cmap, cbar=False, annot=annot, fmt="")
+    ax.set_ylabel("$A\ values$")
+    ax.set_xlabel("$B\ values$")
+    if save_name:
+        plt.savefig(save_name, format="pdf", bbox_inches="tight")
+    else:
+        plt.show()
+    plt.close()
+
+
 
 if __name__ == "__main__":
-    create_hmplots()
+    # create_hmplots()
+    plot_heatmap_slice(save_name=parent / f"figures/axdc1_8b_slice.pdf")
     # plot_error_rates()
