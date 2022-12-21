@@ -213,16 +213,7 @@ def plot_heatmap_slice(
     labels = [f"[{i*group} - {(i+1)*group-1}]" for i in range(size // group)]
     df = pd.DataFrame(errors, index=labels, columns=labels)
 
-    # perc = df.copy()
-    # perc = perc.div(count).multiply(100)
     annot = df.astype(int).astype(str)
-    annot = map(
-        lambda x: x if x != "0" else "",
-        annot,
-        )
-    # Find the slice of the heatmap in the range [0, 31]
-    # df = df.iloc[0:32, 0:32]
-    # annot = annot.iloc[0:32, 0:32]
 
     ax = sns.heatmap(df+10, cmap=cmap, cbar=False, annot=annot, fmt="")
     ax.set_ylabel("$A\ values$")
